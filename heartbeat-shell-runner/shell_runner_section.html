@@ -1,0 +1,165 @@
+<!-- ========== Heartbeat Shell Runner — paste into your dashboard (e.g. a new card) ========== -->
+
+<section class="shell-runner-card" id="shell-runner">
+  <h3>Shell runner</h3>
+  <p class="shell-runner-hint">Run commands on the Orin. Choose working directory (type path or search), then run or stop.</p>
+
+  <div class="shell-runner-form">
+    <div class="shell-runner-field">
+      <label for="shell-cwd">Working directory</label>
+      <div class="shell-runner-path-row">
+        <input type="text" id="shell-cwd" value="/home/dog" placeholder="/home/dog" />
+        <button type="button" id="shell-path-search" title="List / filter directories">Search</button>
+      </div>
+      <div id="shell-path-results" class="shell-path-results" hidden></div>
+    </div>
+
+    <div class="shell-runner-field">
+      <label for="shell-cmd">Command</label>
+      <div class="shell-runner-cmd-row">
+        <input type="text" id="shell-cmd" placeholder="e.g. ls -la" />
+        <select id="shell-preset" title="Preset commands">
+          <option value="">— Preset —</option>
+          <option value="ls -la">ls -la</option>
+          <option value="docker ps">docker ps</option>
+          <option value="free -h">free -h</option>
+          <option value="tegrastats --interval 1000">tegrastats (1s)</option>
+          <option value="nvidia-smi">nvidia-smi</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="shell-runner-actions">
+      <button type="button" id="shell-run-btn">Run</button>
+      <button type="button" id="shell-stop-btn" disabled>Stop</button>
+    </div>
+  </div>
+
+  <div class="shell-runner-output-wrap">
+    <label>Output</label>
+    <pre id="shell-output"></pre>
+  </div>
+</section>
+
+<style>
+  .shell-runner-card { margin: 1rem 0; padding: 1rem; border: 1px solid #444; border-radius: 8px; }
+  .shell-runner-hint { color: #888; font-size: 0.9rem; margin-bottom: 1rem; }
+  .shell-runner-form { display: flex; flex-direction: column; gap: 0.75rem; }
+  .shell-runner-field label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+  .shell-runner-path-row, .shell-runner-cmd-row { display: flex; gap: 0.5rem; align-items: center; }
+  .shell-runner-path-row input, .shell-runner-cmd-row input { flex: 1; padding: 0.4rem 0.6rem; }
+  .shell-path-results { max-height: 200px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; margin-top: 0.25rem; padding: 0.25rem; }
+  .shell-path-results:not([hidden]) { display: block; }
+  .shell-path-item { padding: 0.25rem 0.5rem; cursor: pointer; border-radius: 4px; }
+  .shell-path-item:hover { background: #333; }
+  .shell-runner-actions { display: flex; gap: 0.5rem; }
+  .shell-runner-actions button { padding: 0.5rem 1rem; cursor: pointer; }
+  .shell-runner-output-wrap { margin-top: 1rem; }
+  .shell-runner-output-wrap pre { background: #1a1a1a; padding: 0.75rem; border-radius: 4px; overflow: auto; max-height: 300px; font-size: 0.85rem; white-space: pre-wrap; word-break: break-all; }
+</style>
+
+<script>
+(function() {
+  const base = '';  // or e.g. '' if same origin
+  const cwdEl = document.getElementById('shell-cwd');
+  const pathSearchBtn = document.getElementById('shell-path-search');
+  const pathResults = document.getElementById('shell-path-results');
+  const cmdEl = document.getElementById('shell-cmd');
+  const presetEl = document.getElementById('shell-preset');
+  const runBtn = document.getElementById('shell-run-btn');
+  const stopBtn = document.getElementById('shell-stop-btn');
+  const outputEl = document.getElementById('shell-output');
+
+  let currentProcessId = null;
+  let eventSource = null;
+
+  presetEl.addEventListener('change', function() {
+    const v = presetEl.value;
+    if (v) { cmdEl.value = v; }
+  });
+
+  pathSearchBtn.addEventListener('click', async function() {
+    const path = cwdEl.value.trim() || '/home/dog';
+    const q = prompt('Filter by name (optional):') || '';
+    try {
+      const url = `${base}/api/shell/paths?path=${encodeURIComponent(path)}${q ? '&q=' + encodeURIComponent(q) : ''}`;
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      pathResults.hidden = false;
+      pathResults.innerHTML = data.entries.length
+        ? data.entries.map(function(e) {
+            const full = e.dir ? path.replace(/\/?$/, '/') + e.name : path.replace(/\/?$/, '/') + e.name.replace(/\/$/, '');
+            return '<div class="shell-path-item" data-path="' + full.replace(/"/g, '&quot;') + '">' + e.name + '</div>';
+          }).join('')
+        : '<div class="shell-path-item">No matches</div>';
+      pathResults.querySelectorAll('.shell-path-item[data-path]').forEach(function(el) {
+        el.addEventListener('click', function() {
+          cwdEl.value = el.dataset.path;
+          pathResults.hidden = true;
+        });
+      });
+    } catch (err) {
+      pathResults.hidden = false;
+      pathResults.innerHTML = '<div class="shell-path-item">Error: ' + err.message + '</div>';
+    }
+  });
+
+  runBtn.addEventListener('click', async function() {
+    const cwd = cwdEl.value.trim() || '/home/dog';
+    const command = cmdEl.value.trim();
+    if (!command) return;
+    runBtn.disabled = true;
+    stopBtn.disabled = false;
+    outputEl.textContent = 'Starting…\n';
+    try {
+      const r = await fetch(base + '/api/shell/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'cwd=' + encodeURIComponent(cwd) + '&command=' + encodeURIComponent(command)
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error(t || r.statusText);
+      }
+      const data = await r.json();
+      currentProcessId = data.id;
+      const es = new EventSource(base + '/api/shell/stream/' + data.id);
+      eventSource = es;
+      es.onmessage = function(ev) {
+        try {
+          const d = JSON.parse(ev.data);
+          if (d.error) { outputEl.textContent += d.error + '\n'; return; }
+          if (d.done) { es.close(); runBtn.disabled = false; stopBtn.disabled = true; eventSource = null; return; }
+          if (d.line !== undefined) outputEl.textContent += d.line;
+        } catch (_) {}
+      };
+      es.onerror = function() {
+        es.close();
+        runBtn.disabled = false;
+        stopBtn.disabled = true;
+        eventSource = null;
+      };
+    } catch (err) {
+      outputEl.textContent += 'Error: ' + err.message + '\n';
+      runBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+  });
+
+  stopBtn.addEventListener('click', async function() {
+    if (!currentProcessId) return;
+    try {
+      await fetch(base + '/api/shell/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(currentProcessId)
+      });
+    } catch (_) {}
+    if (eventSource) { eventSource.close(); eventSource = null; }
+    runBtn.disabled = false;
+    stopBtn.disabled = true;
+    outputEl.textContent += '\n[Stopped]\n';
+  });
+})();
+</script>

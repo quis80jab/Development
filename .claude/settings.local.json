@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sshpass -p 'r00t' ssh -o StrictHostKeyChecking=no dog@100.68.165.28 'cat /home/dog/heartbeat/app.py')",
+      "Bash(brew list sshpass)"
+    ]
+  }
+}

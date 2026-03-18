@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heartbeat — Orin Monitor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e0e0e0;--dim:#666;--green:#00ff88;--red:#ff4444;--amber:#ffaa00;--blue:#4488ff;--purple:#aa66ff}
+body{background:var(--bg);color:var(--text);font-family:"SF Mono","Fira Code","JetBrains Mono",monospace;font-size:13px;padding:16px;min-height:100vh}
+h1{font-size:16px;font-weight:600;color:var(--green);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 4px var(--green)}50%{opacity:.4;box-shadow:none}}
+.subtitle{color:var(--dim);font-size:11px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.card-title span{color:var(--text);font-size:12px}
+.bar-wrap{height:6px;background:#1a1a2e;border-radius:3px;overflow:hidden;margin:4px 0}
+.bar{height:100%;border-radius:3px;transition:width .8s ease}
+.bar.green{background:linear-gradient(90deg,#00aa55,var(--green))}
+.bar.amber{background:linear-gradient(90deg,#cc8800,var(--amber))}
+.bar.red{background:linear-gradient(90deg,#cc2222,var(--red))}
+.bar.blue{background:linear-gradient(90deg,#2255cc,var(--blue))}
+.bar.purple{background:linear-gradient(90deg,#7733cc,var(--purple))}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px}
+.stat-label{color:var(--dim)}
+.stat-value{font-weight:600}
+.core-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px}
+.core-box{text-align:center;padding:4px 2px;border-radius:4px;font-size:10px;border:1px solid var(--border)}
+.temp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin-top:4px}
+.temp-item{display:flex;justify-content:space-between;padding:3px 6px;background:#0d0d15;border-radius:4px;font-size:11px}
+.net-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px}
+.net-row:last-child{border:none}
+.docker-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px}
+.docker-row:last-child{border:none}
+.docker-name{font-weight:600;color:var(--blue)}
+.docker-status{font-size:10px;padding:2px 6px;border-radius:3px}
+.docker-status.up{background:rgba(0,255,136,.1);color:var(--green)}
+.docker-status.down{background:rgba(255,68,68,.1);color:var(--red)}
+.btn{padding:3px 8px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--dim);cursor:pointer;font-size:10px;font-family:inherit;transition:all .2s}
+.btn:hover{border-color:var(--text);color:var(--text)}
+.btn.stop:hover{border-color:var(--red);color:var(--red)}
+.btn.start:hover{border-color:var(--green);color:var(--green)}
+.btn:disabled{opacity:.3;cursor:not-allowed;pointer-events:none}
+.disconnected .pulse{background:var(--red);animation:none}
+.vnc-card{grid-column:1/-1}
+.vnc-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.vnc-toolbar .btn{padding:4px 12px;font-size:11px}
+.vnc-toolbar .btn.active{background:rgba(0,255,136,.12);border-color:var(--green);color:var(--green)}
+.vnc-toolbar .sep{width:1px;height:18px;background:var(--border);margin:0 4px}
+.vnc-toolbar-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.vnc-frame-wrap{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.vnc-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.vnc-frame-wrap.collapsed{padding-top:0;height:0;border:none}
+.vnc-badge{font-size:10px;padding:2px 6px;border-radius:3px;background:rgba(0,255,136,.1);color:var(--green)}
+.vnc-badge.off{background:rgba(255,68,68,.1);color:var(--red)}
+.vnc-badge.warn{background:rgba(255,170,0,.1);color:var(--amber)}
+#vnc-fullscreen{position:fixed;inset:0;z-index:9999;display:none}
+#vnc-fullscreen iframe{width:100%;height:100%;border:none}
+#vnc-fullscreen .vnc-close{position:fixed;top:12px;right:12px;z-index:10000;padding:6px 14px;background:rgba(0,0,0,.8);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-family:inherit;font-size:12px;backdrop-filter:blur(8px)}
+#vnc-fullscreen .vnc-close:hover{border-color:var(--red);color:var(--red)}
+
+/* Camera feeds */
+.cam-card{grid-column:1/-1}
+.cam-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;margin-top:8px}
+.cam-feed{position:relative;background:#000;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.cam-feed img{width:100%;height:auto;display:block;min-height:180px;object-fit:contain}
+.cam-feed .cam-label{position:absolute;top:6px;left:8px;font-size:10px;padding:2px 8px;border-radius:3px;background:rgba(0,0,0,.7);color:var(--text);letter-spacing:.5px;backdrop-filter:blur(4px)}
+.cam-feed .cam-status{position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.cam-feed .cam-status.live{background:var(--green);box-shadow:0 0 6px var(--green)}
+.cam-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cam-toolbar .btn{padding:4px 12px;font-size:11px}
+.cam-badge{font-size:10px;padding:2px 6px;border-radius:3px}
+.cam-badge.ok{background:rgba(0,255,136,.1);color:var(--green)}
+.cam-badge.off{background:rgba(255,68,68,.1);color:var(--red)}
+.cam-badge.warn{background:rgba(255,170,0,.1);color:var(--amber)}
+.cam-placeholder{display:flex;align-items:center;justify-content:center;min-height:240px;color:var(--dim);font-size:12px}
+
+/* HuggingFace Camera Bridge */
+.hf-card{grid-column:1/-1}
+.hf-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.hf-toolbar .btn{padding:4px 12px;font-size:11px}
+.hf-toolbar .btn.active{background:rgba(0,255,136,.12);border-color:var(--green);color:var(--green)}
+.hf-select{background:#0d0d15;border:1px solid var(--border);border-radius:4px;color:var(--text);padding:4px 8px;font-family:inherit;font-size:11px}
+.hf-badge{font-size:10px;padding:2px 6px;border-radius:3px}
+.hf-badge.ok{background:rgba(0,255,136,.1);color:var(--green)}
+.hf-badge.off{background:rgba(255,68,68,.1);color:var(--red)}
+.hf-badge.warn{background:rgba(255,170,0,.1);color:var(--amber)}
+.hf-frame-wrap{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+.hf-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.hf-frame-wrap.collapsed{padding-top:0;height:0;border:none}
+#hf-fullscreen{position:fixed;inset:0;z-index:9999;display:none}
+#hf-fullscreen iframe{width:100%;height:100%;border:none}
+
+/* Shell runner */
+.shell-card{grid-column:1/-1}
+.shell-hint{color:var(--dim);font-size:11px;margin-bottom:10px}
+.shell-form{display:flex;flex-direction:column;gap:10px}
+.shell-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:4px}
+.shell-row{display:flex;gap:6px;align-items:center}
+.shell-row input,.shell-row select{background:#0d0d15;border:1px solid var(--border);border-radius:4px;color:var(--text);padding:6px 10px;font-family:inherit;font-size:12px}
+.shell-row input{flex:1}
+.shell-row select{max-width:160px}
+.shell-row .btn{padding:5px 12px;font-size:11px}
+.shell-path-dropdown{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;margin-top:4px;background:var(--card)}
+.shell-path-dropdown[hidden]{display:none}
+.shell-path-item{padding:4px 8px;cursor:pointer;border-radius:3px;font-size:11px;display:flex;align-items:center;gap:6px}
+.shell-path-item:hover{background:rgba(68,136,255,.1)}
+.shell-path-item .dir-icon{color:var(--blue)}
+.shell-path-item .file-icon{color:var(--dim)}
+.shell-actions{display:flex;gap:6px;align-items:center}
+.shell-actions .btn{padding:5px 14px;font-size:11px}
+.shell-actions .btn.run{border-color:var(--green);color:var(--green)}
+.shell-actions .btn.run:hover{background:rgba(0,255,136,.1)}
+.shell-actions .btn.kill{border-color:var(--red);color:var(--red)}
+.shell-actions .btn.kill:hover{background:rgba(255,68,68,.1)}
+.shell-output-wrap{margin-top:10px}
+.shell-output-wrap label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.shell-output-wrap pre{background:#08080d;padding:10px;border-radius:6px;overflow:auto;max-height:320px;font-size:11px;white-space:pre-wrap;word-break:break-all;border:1px solid var(--border);line-height:1.5}
+</style>
+</head>
+<body>
+<h1><span class="pulse" id="pulse"></span> HEARTBEAT</h1>
+<div class="subtitle" id="subtitle">Connecting...</div>
+<div class="grid">
+  <div class="card">
+    <div class="card-title">CPU <span id="cpu-load"></span></div>
+    <div class="stat-row"><span class="stat-label">Usage</span><span class="stat-value" id="cpu-pct">--</span></div>
+    <div class="bar-wrap"><div class="bar green" id="cpu-bar" style="width:0"></div></div>
+    <div class="core-grid" id="cpu-cores"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">GPU <span id="gpu-power"></span></div>
+    <div class="stat-row"><span class="stat-label">Utilization</span><span class="stat-value" id="gpu-pct">--</span></div>
+    <div class="bar-wrap"><div class="bar purple" id="gpu-bar" style="width:0"></div></div>
+    <div class="stat-row"><span class="stat-label">Temperature</span><span class="stat-value" id="gpu-temp">--</span></div>
+    <div class="stat-row"><span class="stat-label">Total Board Power</span><span class="stat-value" id="gpu-total-pwr">--</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Memory</div>
+    <div class="stat-row"><span class="stat-label">RAM</span><span class="stat-value" id="mem-used">--</span></div>
+    <div class="bar-wrap"><div class="bar blue" id="mem-bar" style="width:0"></div></div>
+    <div class="stat-row"><span class="stat-label">Swap</span><span class="stat-value" id="swap-used">--</span></div>
+    <div class="bar-wrap"><div class="bar amber" id="swap-bar" style="width:0"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Disk</div>
+    <div class="stat-row"><span class="stat-label">Storage</span><span class="stat-value" id="disk-used">--</span></div>
+    <div class="bar-wrap"><div class="bar green" id="disk-bar" style="width:0"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Thermal Zones</div>
+    <div class="temp-grid" id="thermal"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Network</div>
+    <div id="network"></div>
+  </div>
+  <div class="card" style="grid-column:1/-1">
+    <div class="card-title">Docker Containers</div>
+    <div id="docker"></div>
+  </div>
+
+  <!-- Camera Feeds -->
+  <div class="card cam-card">
+    <div class="card-title">Camera Feeds <span class="cam-badge off" id="cam-badge">Offline</span></div>
+    <div class="cam-toolbar">
+      <button class="btn start" id="cam-start-btn" onclick="camAction('start')">Start Server</button>
+      <button class="btn stop" id="cam-stop-btn" onclick="camAction('stop')">Stop Server</button>
+      <button class="btn" id="cam-refresh-btn" onclick="camRefresh()">Refresh</button>
+      <div class="sep"></div>
+      <span style="font-size:10px;color:var(--dim)" id="cam-info">Checking...</span>
+    </div>
+    <div class="cam-grid" id="cam-grid">
+      <div class="cam-feed" id="cam-realsense-color">
+        <div class="cam-label">RealSense D455 — Color</div>
+        <div class="cam-status" id="cam-rs-color-status"></div>
+        <img id="cam-rs-color-img" alt="RealSense Color" />
+      </div>
+      <div class="cam-feed" id="cam-realsense-depth">
+        <div class="cam-label">RealSense D455 — Depth</div>
+        <div class="cam-status" id="cam-rs-depth-status"></div>
+        <img id="cam-rs-depth-img" alt="RealSense Depth" />
+      </div>
+      <div class="cam-feed" id="cam-blackfly">
+        <div class="cam-label">Blackfly S — Mono</div>
+        <div class="cam-status" id="cam-bf-status"></div>
+        <img id="cam-bf-img" alt="Blackfly S" />
+      </div>
+    </div>
+  </div>
+
+  <!-- HuggingFace Camera Bridge -->
+  <div class="card hf-card" style="grid-column:1/-1">
+    <div class="card-title">HuggingFace Camera Bridge <span class="hf-badge off" id="hf-badge">Offline</span></div>
+    <div class="hf-toolbar">
+      <span class="vnc-toolbar-label">Active Feed:</span>
+      <select id="hf-stream-select" class="hf-select"></select>
+      <div class="sep"></div>
+      <button class="btn active" id="hf-toggle" onclick="toggleHfPanel()">Hide</button>
+      <button class="btn" onclick="openHfFullscreen()">Fullscreen</button>
+      <button class="btn" onclick="refreshHfStatus()">Refresh</button>
+    </div>
+    <div class="hf-frame-wrap" id="hf-wrap">
+      <iframe id="hf-frame" src="" allow="camera; microphone; clipboard-read; clipboard-write"></iframe>
+    </div>
+  </div>
+
+  <!-- VNC Remote Desktop -->
+  <div class="card vnc-card">
+    <div class="card-title">Remote Desktop <span class="vnc-badge" id="vnc-badge">VNC</span></div>
+    <div class="vnc-toolbar">
+      <span class="vnc-toolbar-label">VNC Server:</span>
+      <button class="btn start" id="vnc-srv-start" onclick="vncServerAction('start')">Start</button>
+      <button class="btn stop" id="vnc-srv-stop" onclick="vncServerAction('stop')">Stop</button>
+      <button class="btn" id="vnc-srv-reboot" onclick="vncServerAction('reboot')">Reboot</button>
+      <div class="sep"></div>
+      <span class="vnc-toolbar-label">Proxy:</span>
+      <button class="btn start" id="vnc-start-btn" onclick="vncContainerAction('start')">Start</button>
+      <button class="btn stop" id="vnc-stop-btn" onclick="vncContainerAction('stop')">Stop</button>
+      <button class="btn" id="vnc-reboot-btn" onclick="vncContainerAction('restart')">Reboot</button>
+      <div class="sep"></div>
+      <button class="btn active" id="vnc-toggle" onclick="toggleVnc()">Hide</button>
+      <button class="btn" onclick="openFullscreen()">Fullscreen</button>
+      <button class="btn" onclick="reconnectVnc()">Reconnect</button>
+    </div>
+    <div class="vnc-frame-wrap" id="vnc-wrap">
+      <iframe id="vnc-frame" src="" allow="clipboard-read; clipboard-write"></iframe>
+    </div>
+  </div>
+
+  <!-- Shell Runner -->
+  <div class="card shell-card">
+    <div class="card-title">Shell Runner</div>
+    <div class="shell-hint">Run commands on the Orin. Pick a working directory, type or select a command, then run.</div>
+    <div class="shell-form">
+      <div class="shell-field">
+        <label>Working Directory</label>
+        <div class="shell-row">
+          <input type="text" id="shell-cwd" value="/home/dog" placeholder="/home/dog" spellcheck="false" />
+          <input type="text" id="shell-path-filter" placeholder="filter..." style="max-width:120px" spellcheck="false" />
+          <button class="btn" id="shell-path-search" title="Browse directory">Browse</button>
+        </div>
+        <div class="shell-path-dropdown" id="shell-path-results" hidden></div>
+      </div>
+      <div class="shell-field">
+        <label>Command</label>
+        <div class="shell-row">
+          <input type="text" id="shell-cmd" placeholder="e.g. ls -la" spellcheck="false" />
+          <select id="shell-preset" title="Preset commands">
+            <option value="">Presets</option>
+            <option value="ls -la">ls -la</option>
+            <option value="docker ps -a">docker ps -a</option>
+            <option value="free -h">free -h</option>
+            <option value="df -h /">df -h /</option>
+            <option value="tegrastats --interval 1000">tegrastats (1s)</option>
+            <option value="nvidia-smi">nvidia-smi</option>
+            <option value="cat /etc/os-release">os-release</option>
+            <option value="docker images">docker images</option>
+          </select>
+        </div>
+      </div>
+      <div class="shell-actions">
+        <button class="btn run" id="shell-run-btn">Run</button>
+        <button class="btn kill" id="shell-stop-btn" disabled>Stop</button>
+        <button class="btn" id="shell-clear-btn">Clear</button>
+      </div>
+    </div>
+    <div class="shell-output-wrap">
+      <label>Output <span id="shell-status"></span></label>
+      <pre id="shell-output"></pre>
+    </div>
+  </div>
+</div>
+
+<!-- VNC Fullscreen overlay -->
+<div id="vnc-fullscreen">
+  <iframe id="vnc-fs-frame" src=""></iframe>
+  <button class="vnc-close" onclick="closeFullscreen()">Exit Fullscreen</button>
+</div>
+
+<!-- HF Fullscreen overlay -->
+<div id="hf-fullscreen">
+  <iframe id="hf-fs-frame" src=""></iframe>
+  <button class="vnc-close" onclick="closeHfFullscreen()">Exit Fullscreen</button>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let ws, prevCpu = null, prevNet = null;
+
+function barColor(pct) {
+  if (pct > 90) return "red";
+  if (pct > 70) return "amber";
+  return "green";
+}
+function fmtBytes(b) {
+  if (b > 1e9) return (b/1e9).toFixed(1) + " GB";
+  if (b > 1e6) return (b/1e6).toFixed(1) + " MB";
+  if (b > 1e3) return (b/1e3).toFixed(1) + " KB";
+  return b + " B";
+}
+function fmtRate(bytesPerSec) {
+  if (bytesPerSec > 1e6) return (bytesPerSec/1e6).toFixed(1) + " MB/s";
+  if (bytesPerSec > 1e3) return (bytesPerSec/1e3).toFixed(1) + " KB/s";
+  return bytesPerSec.toFixed(0) + " B/s";
+}
+function calcCpuPct(curr, prev) {
+  const dTotal = curr.total - prev.total;
+  const dIdle = curr.idle - prev.idle;
+  return dTotal === 0 ? 0 : Math.round((1 - dIdle / dTotal) * 100);
+}
+
+let novncRunning = false;
+
+function updateVncButtons(isUp) {
+  novncRunning = isUp;
+  $("vnc-start-btn").disabled = isUp;
+  $("vnc-stop-btn").disabled = !isUp;
+  $("vnc-reboot-btn").disabled = !isUp;
+}
+
+function update(d) {
+  $("subtitle").textContent = "Uptime: " + d.uptime + " \u2022 " + new Date(d.ts * 1000).toLocaleTimeString();
+
+  if (prevCpu) {
+    const pct = calcCpuPct(d.cpu, prevCpu);
+    $("cpu-pct").textContent = pct + "%";
+    $("cpu-bar").style.width = pct + "%";
+    $("cpu-bar").className = "bar " + barColor(pct);
+    let coresHtml = "";
+    d.cpu.cores.forEach((c, i) => {
+      const pc = prevCpu.cores[i];
+      const dt = c.total - pc.total, di = c.idle - pc.idle;
+      const cp = dt === 0 ? 0 : Math.round((1 - di / dt) * 100);
+      const freq = d.cpu.freqs_mhz[i] ? Math.round(d.cpu.freqs_mhz[i]) : "?";
+      const bg = cp > 90 ? "rgba(255,68,68,.15)" : cp > 60 ? "rgba(255,170,0,.1)" : "rgba(0,255,136,.06)";
+      coresHtml += '<div class="core-box" style="background:' + bg + '"><div style="font-weight:700">' + cp + '%</div><div style="color:var(--dim)">' + freq + 'M</div></div>';
+    });
+    $("cpu-cores").innerHTML = coresHtml;
+  }
+  $("cpu-load").textContent = "Load: " + d.cpu.load.join(" ");
+  prevCpu = d.cpu;
+
+  const gp = d.gpu.utilization_pct || 0;
+  $("gpu-pct").textContent = gp + "%";
+  $("gpu-bar").style.width = gp + "%";
+  $("gpu-bar").className = "bar " + (gp > 80 ? "red" : gp > 50 ? "amber" : "purple");
+  $("gpu-temp").textContent = d.gpu.temp_c != null ? d.gpu.temp_c + "\u00b0C" : "N/A";
+  $("gpu-power").textContent = d.gpu.power_mw ? (d.gpu.power_mw / 1000).toFixed(1) + "W" : "";
+  $("gpu-total-pwr").textContent = d.gpu.total_power_mw ? (d.gpu.total_power_mw / 1000).toFixed(1) + "W" : "N/A";
+
+  const mp = Math.round(d.memory.used_mb / d.memory.total_mb * 100);
+  $("mem-used").textContent = d.memory.used_mb + " / " + d.memory.total_mb + " MB (" + mp + "%)";
+  $("mem-bar").style.width = mp + "%";
+  $("mem-bar").className = "bar " + barColor(mp);
+  if (d.memory.swap_total_mb > 0) {
+    const sp = Math.round(d.memory.swap_used_mb / d.memory.swap_total_mb * 100);
+    $("swap-used").textContent = d.memory.swap_used_mb + " / " + d.memory.swap_total_mb + " MB (" + sp + "%)";
+    $("swap-bar").style.width = sp + "%";
+  } else {
+    $("swap-used").textContent = "No swap";
+  }
+
+  $("disk-used").textContent = d.disk.used_gb + " / " + d.disk.total_gb + " GB (" + d.disk.pct + ")";
+  const dp = parseInt(d.disk.pct);
+  $("disk-bar").style.width = dp + "%";
+  $("disk-bar").className = "bar " + barColor(dp);
+
+  let th = "";
+  for (const [name, temp] of Object.entries(d.thermal)) {
+    const c = temp > 80 ? "var(--red)" : temp > 60 ? "var(--amber)" : "var(--green)";
+    th += '<div class="temp-item"><span style="color:var(--dim)">' + name + '</span><span style="color:' + c + '">' + temp.toFixed(1) + '\u00b0C</span></div>';
+  }
+  $("thermal").innerHTML = th;
+
+  let nh = "";
+  if (prevNet) {
+    const dt = 1.5;
+    for (const [iface, stats] of Object.entries(d.network)) {
+      const prev = prevNet[iface];
+      if (!prev) continue;
+      const rxRate = (stats.rx_bytes - prev.rx_bytes) / dt;
+      const txRate = (stats.tx_bytes - prev.tx_bytes) / dt;
+      nh += '<div class="net-row"><span style="color:var(--blue)">' + iface + '</span><span>\u2193 ' + fmtRate(rxRate) + ' / \u2191 ' + fmtRate(txRate) + '</span><span style="color:var(--dim)">' + fmtBytes(stats.rx_bytes) + ' / ' + fmtBytes(stats.tx_bytes) + '</span></div>';
+    }
+  }
+  $("network").innerHTML = nh || '<div style="color:var(--dim)">Calculating...</div>';
+  prevNet = d.network;
+
+  let novncUp = false;
+  let dh = "";
+  for (const c of d.docker) {
+    const isUp = c.status.toLowerCase().startsWith("up");
+    if (c.name === "novnc-proxy") novncUp = isUp;
+    dh += '<div class="docker-row"><span class="docker-name">' + c.name + '</span><span style="color:var(--dim);flex:1;margin:0 12px;overflow:hidden;text-overflow:ellipsis">' + c.image + '</span><span class="docker-status ' + (isUp ? "up" : "down") + '">' + c.status + '</span><span style="margin-left:8px;display:flex;gap:4px">';
+    if (isUp) {
+      dh += '<button class="btn stop" onclick="dockerAction(\'stop\',\'' + c.name + '\')">Stop</button><button class="btn" onclick="dockerAction(\'restart\',\'' + c.name + '\')">Restart</button>';
+    } else {
+      dh += '<button class="btn start" onclick="dockerAction(\'start\',\'' + c.name + '\')">Start</button>';
+    }
+    dh += '</span></div>';
+  }
+  $("docker").innerHTML = dh || '<div style="color:var(--dim)">No containers</div>';
+  updateVncButtons(novncUp);
+}
+
+async function dockerAction(action, name) {
+  try {
+    const res = await fetch("/api/docker/" + action + "/" + name, {method: "POST"});
+    const data = await res.json();
+    if (data.error) alert("Error: " + data.error);
+  } catch(e) { alert("Failed: " + e.message); }
+}
+
+/* ── VNC Server (host TigerVNC) controls ── */
+async function vncServerAction(action) {
+  const badge = $("vnc-badge");
+  $("vnc-srv-start").disabled = $("vnc-srv-stop").disabled = $("vnc-srv-reboot").disabled = true;
+  badge.className = "vnc-badge warn";
+  badge.textContent = action === "start" ? "Starting server..." : action === "stop" ? "Stopping server..." : "Rebooting server...";
+  try {
+    const res = await fetch("/api/vnc-server/" + action, {method: "POST"});
+    const data = await res.json();
+    if (data.error) {
+      badge.className = "vnc-badge off";
+      badge.textContent = "Error";
+      alert("VNC server " + action + " failed: " + data.error);
+    } else {
+      if (action === "stop") {
+        badge.className = "vnc-badge off";
+        badge.textContent = "Server stopped";
+        $("vnc-frame").src = "";
+        vncLoaded = false;
+      } else {
+        badge.className = "vnc-badge";
+        badge.textContent = "Server started";
+        setTimeout(function() { reconnectVnc(); }, 2000);
+      }
+    }
+  } catch(e) {
+    badge.className = "vnc-badge off";
+    badge.textContent = "Error";
+    alert("Failed: " + e.message);
+  }
+  $("vnc-srv-start").disabled = false;
+  $("vnc-srv-stop").disabled = false;
+  $("vnc-srv-reboot").disabled = false;
+}
+
+/* ── noVNC proxy container controls ── */
+async function vncContainerAction(action) {
+  const badge = $("vnc-badge");
+  $("vnc-start-btn").disabled = $("vnc-stop-btn").disabled = $("vnc-reboot-btn").disabled = true;
+  if (action === "stop" || action === "restart") {
+    $("vnc-frame").src = "";
+    vncLoaded = false;
+  }
+  badge.className = "vnc-badge warn";
+  badge.textContent = action === "start" ? "Starting proxy..." : action === "stop" ? "Stopping proxy..." : "Rebooting proxy...";
+  try {
+    const res = await fetch("/api/docker/" + action + "/novnc-proxy", {method: "POST"});
+    const data = await res.json();
+    if (data.error) {
+      badge.className = "vnc-badge off";
+      badge.textContent = "Error";
+      alert("noVNC " + action + " failed: " + data.error);
+      return;
+    }
+    if (action === "stop") {
+      badge.className = "vnc-badge off";
+      badge.textContent = "Proxy stopped";
+    } else {
+      badge.className = "vnc-badge warn";
+      badge.textContent = "Waiting...";
+      setTimeout(function() {
+        loadVnc();
+        badge.className = "vnc-badge";
+        badge.textContent = "Connected";
+      }, action === "restart" ? 3000 : 2000);
+    }
+  } catch(e) {
+    badge.className = "vnc-badge off";
+    badge.textContent = "Error";
+    alert("Failed: " + e.message);
+  }
+}
+
+function connect() {
+  const proto = location.protocol === "https:" ? "wss:" : "ws:";
+  ws = new WebSocket(proto + "//" + location.host + "/ws");
+  ws.onopen = () => { document.body.classList.remove("disconnected"); };
+  ws.onmessage = (e) => { update(JSON.parse(e.data)); };
+  ws.onclose = () => {
+    document.body.classList.add("disconnected");
+    $("subtitle").textContent = "Disconnected \u2014 reconnecting...";
+    setTimeout(connect, 2000);
+  };
+}
+connect();
+
+/* ── VNC Panel ── */
+const vncUrl = location.protocol + "//" + location.hostname + ":6080/vnc.html?autoconnect=true&resize=scale&reconnect=true&reconnect_delay=2000";
+let vncLoaded = false;
+
+function loadVnc() {
+  if (!vncLoaded) {
+    $("vnc-frame").src = vncUrl;
+    vncLoaded = true;
+    $("vnc-badge").className = "vnc-badge";
+    $("vnc-badge").textContent = "Connected";
+  }
+}
+function toggleVnc() {
+  const wrap = $("vnc-wrap");
+  const btn = $("vnc-toggle");
+  if (wrap.classList.contains("collapsed")) {
+    wrap.classList.remove("collapsed");
+    btn.textContent = "Hide";
+    btn.classList.add("active");
+    if (novncRunning) loadVnc();
+  } else {
+    wrap.classList.add("collapsed");
+    btn.textContent = "Show";
+    btn.classList.remove("active");
+  }
+}
+function openFullscreen() {
+  if (!novncRunning) return;
+  $("vnc-fs-frame").src = vncUrl;
+  $("vnc-fullscreen").style.display = "block";
+}
+function closeFullscreen() {
+  $("vnc-fullscreen").style.display = "none";
+  $("vnc-fs-frame").src = "";
+}
+function reconnectVnc() {
+  vncLoaded = false;
+  $("vnc-frame").src = "";
+  $("vnc-badge").className = "vnc-badge off";
+  $("vnc-badge").textContent = "Reconnecting...";
+  setTimeout(loadVnc, 500);
+}
+loadVnc();
+
+/* ── Shell Runner ── */
+(function() {
+  const cwdEl = $('shell-cwd');
+  const filterEl = $('shell-path-filter');
+  const searchBtn = $('shell-path-search');
+  const pathResults = $('shell-path-results');
+  const cmdEl = $('shell-cmd');
+  const presetEl = $('shell-preset');
+  const runBtn = $('shell-run-btn');
+  const stopBtn = $('shell-stop-btn');
+  const clearBtn = $('shell-clear-btn');
+  const outputEl = $('shell-output');
+  const statusEl = $('shell-status');
+  let currentProcessId = null;
+  let eventSource = null;
+
+  presetEl.addEventListener('change', function() {
+    if (presetEl.value) cmdEl.value = presetEl.value;
+  });
+
+  // Enter key in command field runs the command
+  cmdEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !runBtn.disabled) runBtn.click();
+  });
+
+  // Browse directories
+  async function browsePath() {
+    const path = cwdEl.value.trim() || '/home/dog';
+    const q = filterEl.value.trim();
+    try {
+      const url = '/api/shell/paths?path=' + encodeURIComponent(path) + (q ? '&q=' + encodeURIComponent(q) : '');
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      pathResults.hidden = false;
+      if (!data.entries.length) {
+        pathResults.innerHTML = '<div class="shell-path-item" style="color:var(--dim)">No matches</div>';
+        return;
+      }
+      pathResults.innerHTML = data.entries.map(function(e) {
+        const base = data.path.replace(/\/?$/, '/');
+        const full = base + e.name.replace(/\/$/, '');
+        const icon = e.dir ? '<span class="dir-icon">+</span>' : '<span class="file-icon">-</span>';
+        return '<div class="shell-path-item" data-path="' + full.replace(/"/g, '&quot;') + '" data-dir="' + e.dir + '">' + icon + ' ' + e.name + '</div>';
+      }).join('');
+      pathResults.querySelectorAll('.shell-path-item[data-path]').forEach(function(el) {
+        el.addEventListener('click', function() {
+          cwdEl.value = el.dataset.path;
+          if (el.dataset.dir === 'true') {
+            filterEl.value = '';
+            browsePath();
+          } else {
+            pathResults.hidden = true;
+          }
+        });
+      });
+    } catch (err) {
+      pathResults.hidden = false;
+      pathResults.innerHTML = '<div class="shell-path-item" style="color:var(--red)">Error: ' + err.message + '</div>';
+    }
+  }
+
+  searchBtn.addEventListener('click', browsePath);
+  filterEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') browsePath();
+  });
+
+  // Close path dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!pathResults.contains(e.target) && e.target !== searchBtn && e.target !== filterEl && e.target !== cwdEl) {
+      pathResults.hidden = true;
+    }
+  });
+
+  clearBtn.addEventListener('click', function() {
+    outputEl.textContent = '';
+    statusEl.textContent = '';
+  });
+
+  runBtn.addEventListener('click', async function() {
+    const cwd = cwdEl.value.trim() || '/home/dog';
+    const command = cmdEl.value.trim();
+    if (!command) return;
+    runBtn.disabled = true;
+    stopBtn.disabled = false;
+    outputEl.textContent = '';
+    statusEl.textContent = 'Running...';
+    statusEl.style.color = 'var(--amber)';
+    try {
+      const r = await fetch('/api/shell/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'cwd=' + encodeURIComponent(cwd) + '&command=' + encodeURIComponent(command)
+      });
+      if (!r.ok) throw new Error((await r.text()) || r.statusText);
+      const data = await r.json();
+      currentProcessId = data.id;
+      const es = new EventSource('/api/shell/stream/' + data.id);
+      eventSource = es;
+      es.onmessage = function(ev) {
+        try {
+          const d = JSON.parse(ev.data);
+          if (d.error) { outputEl.textContent += d.error + '\n'; return; }
+          if (d.done) {
+            es.close();
+            runBtn.disabled = false;
+            stopBtn.disabled = true;
+            eventSource = null;
+            statusEl.textContent = 'Done';
+            statusEl.style.color = 'var(--green)';
+            return;
+          }
+          if (d.line !== undefined) {
+            outputEl.textContent += d.line;
+            outputEl.scrollTop = outputEl.scrollHeight;
+          }
+        } catch (_) {}
+      };
+      es.onerror = function() {
+        es.close();
+        runBtn.disabled = false;
+        stopBtn.disabled = true;
+        eventSource = null;
+        statusEl.textContent = 'Disconnected';
+        statusEl.style.color = 'var(--red)';
+      };
+    } catch (err) {
+      outputEl.textContent += 'Error: ' + err.message + '\n';
+      runBtn.disabled = false;
+      stopBtn.disabled = true;
+      statusEl.textContent = 'Error';
+      statusEl.style.color = 'var(--red)';
+    }
+  });
+
+  stopBtn.addEventListener('click', async function() {
+    if (!currentProcessId) return;
+    try {
+      await fetch('/api/shell/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(currentProcessId)
+      });
+    } catch (_) {}
+    if (eventSource) { eventSource.close(); eventSource = null; }
+    runBtn.disabled = false;
+    stopBtn.disabled = true;
+    outputEl.textContent += '\n[Stopped]\n';
+    statusEl.textContent = 'Stopped';
+    statusEl.style.color = 'var(--red)';
+  });
+})();
+
+/* ── Camera Feeds (snapshot polling — avoids browser MJPEG connection limits) ── */
+(function() {
+  const CAM_PORT = 8890;
+  const camBase = location.protocol + '//' + location.hostname + ':' + CAM_PORT;
+  const SNAP_INTERVAL_MS = 250;  // ~4 fps per feed
+  let camPolling = false;
+  let camTimers = {};
+
+  const badge = $('cam-badge');
+  const info = $('cam-info');
+
+  const feeds = [
+    { key: 'realsense_color', path: '/snapshot/realsense/color', img: $('cam-rs-color-img'), status: $('cam-rs-color-status') },
+    { key: 'realsense_depth', path: '/snapshot/realsense/depth', img: $('cam-rs-depth-img'), status: $('cam-rs-depth-status') },
+    { key: 'blackfly',        path: '/snapshot/blackfly',        img: $('cam-bf-img'),       status: $('cam-bf-status') },
+  ];
+
+  // Fetch a single snapshot and update the <img> via blob URL
+  async function pollSnapshot(feed) {
+    if (!camPolling) return;
+    try {
+      const r = await fetch(camBase + feed.path, { cache: 'no-store', signal: AbortSignal.timeout(3000) });
+      if (r.ok && r.headers.get('content-type')?.startsWith('image/')) {
+        const blob = await r.blob();
+        const prev = feed.img.dataset.blobUrl;
+        if (prev) URL.revokeObjectURL(prev);
+        const url = URL.createObjectURL(blob);
+        feed.img.src = url;
+        feed.img.dataset.blobUrl = url;
+        feed.status.classList.add('live');
+      } else {
+        feed.status.classList.remove('live');
+      }
+    } catch {
+      feed.status.classList.remove('live');
+    }
+    if (camPolling) camTimers[feed.key] = setTimeout(function() { pollSnapshot(feed); }, SNAP_INTERVAL_MS);
+  }
+
+  function startStreams() {
+    if (camPolling) return;
+    camPolling = true;
+    feeds.forEach(function(f) { pollSnapshot(f); });
+  }
+
+  function stopStreams() {
+    camPolling = false;
+    Object.values(camTimers).forEach(clearTimeout);
+    camTimers = {};
+    feeds.forEach(function(f) {
+      f.img.src = '';
+      if (f.img.dataset.blobUrl) { URL.revokeObjectURL(f.img.dataset.blobUrl); f.img.dataset.blobUrl = ''; }
+      f.status.classList.remove('live');
+    });
+  }
+
+  async function checkStatus() {
+    try {
+      const r = await fetch(camBase + '/status', { signal: AbortSignal.timeout(3000) });
+      const data = await r.json();
+      const rsOk = data.cameras.realsense.ok;
+      const bfOk = data.cameras.blackfly.ok;
+      const anyStream = data.streams.realsense_color || data.streams.realsense_depth || data.streams.blackfly;
+
+      if (rsOk && bfOk) {
+        badge.className = 'cam-badge ok';
+        badge.textContent = 'All Online';
+      } else if (rsOk || bfOk) {
+        badge.className = 'cam-badge warn';
+        badge.textContent = 'Partial';
+      } else {
+        badge.className = 'cam-badge off';
+        badge.textContent = 'Offline';
+      }
+
+      let parts = [];
+      if (rsOk) parts.push('RealSense OK');
+      else parts.push('RealSense: ' + (data.cameras.realsense.error || 'offline'));
+      if (bfOk) parts.push('Blackfly OK');
+      else parts.push('Blackfly: ' + (data.cameras.blackfly.error || 'offline'));
+      info.textContent = parts.join(' · ');
+
+      if (anyStream && !camPolling) startStreams();
+      return true;
+    } catch (e) {
+      badge.className = 'cam-badge off';
+      badge.textContent = 'Server Down';
+      info.textContent = 'Camera server not reachable on port ' + CAM_PORT;
+      return false;
+    }
+  }
+
+  async function pollStatus() {
+    await checkStatus();
+    setTimeout(pollStatus, 5000);
+  }
+  pollStatus();
+
+  window.camAction = async function(action) {
+    if (action === 'start') {
+      info.textContent = 'Starting camera server...';
+      try {
+        await fetch('/api/shell/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'cwd=/home/dog&command=' + encodeURIComponent('sudo systemctl start camera-server.service')
+        });
+        badge.className = 'cam-badge warn';
+        badge.textContent = 'Starting...';
+        setTimeout(function() { checkStatus(); }, 4000);
+      } catch (e) { info.textContent = 'Failed: ' + e.message; }
+    } else if (action === 'stop') {
+      stopStreams();
+      try {
+        await fetch('/api/shell/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'cwd=/home/dog&command=' + encodeURIComponent('sudo systemctl stop camera-server.service')
+        });
+        badge.className = 'cam-badge off';
+        badge.textContent = 'Stopped';
+        info.textContent = 'Camera server stopped';
+      } catch (e) { info.textContent = 'Failed: ' + e.message; }
+    }
+  };
+
+  window.camRefresh = function() {
+    stopStreams();
+    setTimeout(function() { checkStatus(); }, 500);
+  };
+})();
+
+/* ── HuggingFace Camera Bridge Panel ── */
+(function() {
+  const HF_MW_PORT = 8891;
+  const mwBase = location.protocol + '//' + location.hostname + ':' + HF_MW_PORT;
+  const mwWebcamUrl = mwBase + '/webcam';
+
+  const hfBadge = $('hf-badge');
+  const hfSelect = $('hf-stream-select');
+  const hfFrame = $('hf-frame');
+  let hfLoaded = false;
+
+  function loadHfFrame() {
+    if (!hfLoaded) {
+      hfFrame.src = mwWebcamUrl;
+      hfLoaded = true;
+    }
+  }
+
+  async function refreshHfStatusInner() {
+    try {
+      const r = await fetch(mwBase + '/api/streams', { signal: AbortSignal.timeout(3000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const streams = data.streams || [];
+      hfSelect.innerHTML = '';
+      let anyOk = false;
+      streams.forEach(function(s) {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = s.label + (s.ok ? '' : ' (offline)');
+        if (s.active) opt.selected = true;
+        if (s.ok) anyOk = true;
+        hfSelect.appendChild(opt);
+      });
+      if (anyOk) {
+        hfBadge.className = 'hf-badge ok';
+        hfBadge.textContent = 'Online';
+        loadHfFrame();
+      } else {
+        hfBadge.className = 'hf-badge warn';
+        hfBadge.textContent = 'No Feeds';
+      }
+    } catch (e) {
+      hfBadge.className = 'hf-badge off';
+      hfBadge.textContent = 'Middleware Down';
+    }
+  }
+
+  hfSelect.addEventListener('change', async function() {
+    const id = hfSelect.value;
+    try {
+      await fetch(mwBase + '/api/streams/select', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+      });
+    } catch (e) {
+      console.error('HF stream select failed:', e);
+    }
+  });
+
+  window.toggleHfPanel = function() {
+    const wrap = $('hf-wrap');
+    const btn = $('hf-toggle');
+    if (wrap.classList.contains('collapsed')) {
+      wrap.classList.remove('collapsed');
+      btn.textContent = 'Hide';
+      btn.classList.add('active');
+      loadHfFrame();
+    } else {
+      wrap.classList.add('collapsed');
+      btn.textContent = 'Show';
+      btn.classList.remove('active');
+    }
+  };
+
+  window.openHfFullscreen = function() {
+    $('hf-fs-frame').src = mwWebcamUrl;
+    $('hf-fullscreen').style.display = 'block';
+  };
+
+  window.closeHfFullscreen = function() {
+    $('hf-fullscreen').style.display = 'none';
+    $('hf-fs-frame').src = '';
+  };
+
+  window.refreshHfStatus = refreshHfStatusInner;
+
+  // Initial check + periodic poll
+  refreshHfStatusInner();
+  setInterval(refreshHfStatusInner, 10000);
+})();
+</script>
+</body>
+</html>

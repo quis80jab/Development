@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Heartbeat Camera Webcam</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        background: #050816;
+        color: #e5e7eb;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+      }
+      header {
+        padding: 16px 24px;
+        width: 100%;
+        max-width: 960px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .status-pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(15, 118, 110, 0.2);
+        color: #a5f3fc;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+      main {
+        width: 100%;
+        max-width: 960px;
+        box-sizing: border-box;
+        padding: 0 24px 32px;
+      }
+      .card {
+        background: radial-gradient(circle at top, #111827, #020617);
+        border-radius: 16px;
+        padding: 16px 16px 20px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      label {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      select {
+        background: #020617;
+        color: #e5e7eb;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        padding: 6px 12px;
+        font-size: 13px;
+        outline: none;
+      }
+      button {
+        border-radius: 999px;
+        border: none;
+        padding: 6px 14px;
+        font-size: 13px;
+        cursor: pointer;
+        background: linear-gradient(135deg, #22c55e, #0ea5e9);
+        color: #020617;
+        font-weight: 500;
+      }
+      button.secondary {
+        background: rgba(15, 23, 42, 0.9);
+        color: #e5e7eb;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+      }
+      .video-shell {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #020617;
+        border: 1px solid rgba(31, 41, 55, 0.9);
+      }
+      #videoCanvas {
+        width: 100%;
+        display: block;
+        background: #020617;
+      }
+      #frameImg {
+        display: none;
+      }
+      .banner {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.85);
+        color: #e5e7eb;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .badge {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(55, 65, 81, 0.9);
+        color: #e5e7eb;
+      }
+      .error {
+        color: #fca5a5;
+        font-size: 12px;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="title">Heartbeat Camera Webcam</div>
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Connecting…</span>
+      </div>
+    </header>
+    <main>
+      <div class="card">
+        <div class="controls">
+          <div class="group">
+            <label for="streamSelect">Camera feed</label>
+            <select id="streamSelect"></select>
+          </div>
+          <div class="group">
+            <button id="refreshBtn" class="secondary">Refresh status</button>
+            <button id="copyCodeBtn">Copy HF usage snippet</button>
+          </div>
+        </div>
+        <div class="video-shell">
+          <canvas id="videoCanvas"></canvas>
+          <img id="frameImg" alt="Camera frame" />
+          <div class="banner">
+            <span class="badge">HF Webcam Bridge</span>
+            <span id="bannerText">Waiting for first frame…</span>
+          </div>
+        </div>
+        <div class="error" id="errorText"></div>
+      </div>
+    </main>
+    <script>
+      (function () {
+        const streamSelect = document.getElementById("streamSelect");
+        const statusPill = document.getElementById("statusPill");
+        const statusDot = document.getElementById("statusDot");
+        const statusText = document.getElementById("statusText");
+        const canvas = document.getElementById("videoCanvas");
+        const img = document.getElementById("frameImg");
+        const bannerText = document.getElementById("bannerText");
+        const errorText = document.getElementById("errorText");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const copyCodeBtn = document.getElementById("copyCodeBtn");
+
+        const ctx = canvas.getContext("2d");
+        let pollingIntervalMs = 180;
+        let frameTimer = null;
+        let currentStreamId = null;
+        let mediaStream = null;
+
+        function setStatus(ok, text) {
+          statusDot.style.background = ok ? "#22c55e" : "#f97316";
+          statusPill.style.background = ok
+            ? "rgba(15, 118, 110, 0.2)"
+            : "rgba(180, 83, 9, 0.15)";
+          statusText.textContent = text;
+        }
+
+        async function fetchStreams() {
+          try {
+            const res = await fetch("/api/streams");
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const data = await res.json();
+            const streams = data.streams || [];
+            streamSelect.innerHTML = "";
+            streams.forEach((s) => {
+              const opt = document.createElement("option");
+              opt.value = s.id;
+              opt.textContent = s.label + (s.ok ? "" : " (offline)");
+              if (s.active) opt.selected = true;
+              streamSelect.appendChild(opt);
+            });
+            const active =
+              streams.find((s) => s.active) || streams.find((s) => s.ok) || streams[0];
+            if (active) {
+              currentStreamId = active.id;
+              updateStatusFromStreams(streams);
+            }
+          } catch (err) {
+            console.error("fetchStreams error", err);
+            setStatus(false, "Error talking to middleware");
+          }
+        }
+
+        function updateStatusFromStreams(streams) {
+          const anyOk = streams.some((s) => s.ok);
+          if (!anyOk) {
+            setStatus(false, "No camera feeds available");
+            errorText.textContent =
+              "Heartbeat camera server is not providing frames yet.";
+          } else {
+            setStatus(true, "Streaming from Heartbeat cameras");
+            errorText.textContent = "";
+          }
+        }
+
+        async function selectStream(id) {
+          try {
+            await fetch("/api/streams/select", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ id }),
+            });
+            currentStreamId = id;
+            bannerText.textContent = "Switched to " + id;
+          } catch (err) {
+            console.error("selectStream error", err);
+          }
+        }
+
+        async function fetchFrame() {
+          try {
+            const res = await fetch("/api/frame", { cache: "no-store" });
+            if (!res.ok) {
+              if (res.status === 503) {
+                bannerText.textContent = "Waiting for camera frames…";
+              } else {
+                bannerText.textContent = "Error " + res.status;
+              }
+              return;
+            }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            img.onload = function () {
+              try {
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                if (!mediaStream) {
+                  mediaStream = canvas.captureStream(15);
+                  window.heartbeatCamera = {
+                    getMediaStream: function () {
+                      return mediaStream;
+                    },
+                    selectStream: function (id) {
+                      streamSelect.value = id;
+                      selectStream(id);
+                    },
+                  };
+                  bannerText.textContent = "MediaStream ready for HuggingFace.";
+                } else {
+                  bannerText.textContent = "Streaming " + currentStreamId + ".";
+                }
+              } finally {
+                URL.revokeObjectURL(url);
+              }
+            };
+            img.src = url;
+          } catch (err) {
+            console.error("fetchFrame error", err);
+            bannerText.textContent = "Error fetching frame.";
+          }
+        }
+
+        function startFrameLoop() {
+          if (frameTimer) clearInterval(frameTimer);
+          frameTimer = setInterval(fetchFrame, pollingIntervalMs);
+        }
+
+        function setupEvents() {
+          streamSelect.addEventListener("change", (e) => {
+            const id = e.target.value;
+            selectStream(id);
+          });
+          refreshBtn.addEventListener("click", () => {
+            fetchStreams();
+          });
+          copyCodeBtn.addEventListener("click", async () => {
+            const snippet = [
+              "// In your HuggingFace Space front-end JS:",
+              "// 1. Load this page in an iframe OR include /static/webcam.js (future).",
+              "// 2. Then:",
+              "const stream = window.heartbeatCamera.getMediaStream();",
+              "const video = document.querySelector('video');",
+              "video.srcObject = stream;",
+              "video.play();",
+            ].join("\n");
+            try {
+              await navigator.clipboard.writeText(snippet);
+              bannerText.textContent = "Usage snippet copied to clipboard.";
+            } catch (err) {
+              console.error("clipboard error", err);
+              bannerText.textContent = "Unable to copy; see console for snippet.";
+            }
+          });
+        }
+
+        async function init() {
+          setupEvents();
+          await fetchStreams();
+          startFrameLoop();
+        }
+
+        init();
+      })();
+    </script>
+  </body>
+</html>
+
