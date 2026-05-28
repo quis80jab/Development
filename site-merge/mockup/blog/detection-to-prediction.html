@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>From Detection to Prediction: Forecasting Failures 6 Months Out | Arachnid Systems</title>
+  <meta name="description" content="Inside the AI behind ATLAS Connect's Dewey agent. YOLOv8 + Vision Transformer for detection (98.5% precision, 96.2% recall). LSTM + XGBoost for failure prediction (94% at 6 months, 87% at 12). Trained on 16M+ flight hours." />
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="mockup">
+  <div class="mockup-banner">MOCKUP · ARACHNID v0.1 · pre-deployment · review only</div>
+
+  <nav class="nav">
+    <a href="../index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>ARACHNID</a>
+    <div class="nav-links">
+      <a href="../platform.html">Platform</a>
+      <a href="../aviation.html">Solutions</a>
+      <a href="../about.html">About</a>
+      <a href="../resources.html" class="active">Resources</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <a href="../contact.html" class="nav-cta">Schedule a Demo →</a>
+  </nav>
+
+  <!-- ═════ HERO ═════ -->
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Product deep dive · June 2026</p>
+      <h1 class="display-l">From Detection to Prediction:<br/>Forecasting Failures<br/>6 Months Out.</h1>
+      <p class="meta" style="margin-top: 24px;">By the ARACHNID Systems team · ~9 min read</p>
+      <p class="lede">Detection tells you what is wrong on the airframe today. Prediction tells you what will be wrong six months from now — and what to schedule around it. ATLAS Connect runs both: a <strong>YOLOv8 + Vision Transformer</strong> defect-detection stack and an <strong>LSTM + XGBoost</strong> failure-prediction stack, trained on <strong>16+ million flight hours</strong> of commercial aviation data. This is the engineering note behind Dewey — the agent that turns a stack of inspection scans into a maintenance calendar.</p>
+      <div class="page-hero-actions">
+        <a href="../contact.html" class="link-cta">Schedule a Demo</a>
+        <a href="../platform.html#connect" class="link-cta link-cta--dim">See ATLAS Connect</a>
+      </div>
+
+      <div style="margin-top: 64px;">
+        <div class="asset-ph" style="min-height: 360px; padding: 0;">
+          <img class="photo-blog" src="../assets/photos/unsplash/blog-ai.jpg" alt="Server room data infrastructure — the AI compute layer behind ATLAS Connect" style="min-height: 360px;" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═════ ARTICLE BODY ═════ -->
+  <section class="section">
+    <div class="container">
+      <div class="article-body">
+
+        <h2 class="display-m">The limits of detection-only.</h2>
+        <p>Almost every conversation about AI in aircraft maintenance starts with a precision number. Ours starts with two: <strong>98.5% precision and 96.2% recall</strong> on visual defect detection, validated against 10,000+ labelled images across cracks, corrosion, delamination, dents, and missing fasteners. Fifty-plus defect classes. False-positive rate under 3%. That is the headline performance for the detection stack — and on its own, it is not enough.</p>
+        <p class="meta">Source: Product Specifications.pdf §AI/ML Capabilities — Defect Detection Model</p>
+        <p>Detection-only is a useful tool that solves a narrow problem: given a fuselage in front of the robot right now, which patches of the surface need a Level III technician to look at. It is faster than a manual walk-around, more consistent, and audit-traceable. What it does not do is answer the question the maintenance director actually asks at the Monday planning meeting — <em>which of these 40 airframes will need work in November, and which can wait?</em></p>
+        <p>That question requires a second model class. It requires temporal context — the inspection record treated not as a single image but as a time series of inspections against the same hull. And it requires the system to bet on the future and be measured on whether the bet was right.</p>
+
+        <h2 class="display-m">Two model classes, one timeline.</h2>
+        <p>ATLAS Connect ships two production models that work in series. The first sees. The second predicts.</p>
+        <p><strong>Huey — the detection model.</strong> An object-detection backbone built on YOLOv8 (single-shot, real-time, optimised for speed and bounding-box localisation) fused with a Vision Transformer head (which carries global image context — useful for subtle, distributed defects that a CNN alone misses on a wide-area fuselage shot). Together they classify and localise 50+ defect types at the precision and recall numbers cited above. Inference runs on the edge — NVIDIA Jetson AGX Orin — so the call happens in the hangar, not in the cloud.</p>
+        <p class="meta">Source: Product Specifications.pdf §AI/ML Capabilities — Defect Detection Model (YOLOv8 + Vision Transformer · 50+ defect types · 98.5% precision · 96.2% recall · validated on 10,000+ images)</p>
+        <p><strong>Dewey — the prediction model.</strong> A Long Short-Term Memory (LSTM) network fused with an XGBoost gradient-boosted-trees ensemble. The LSTM consumes longitudinal scan data — every previous inspection of the same airframe, in order — and learns how a given defect class evolves over flight cycles. XGBoost then operates on the LSTM's latent state plus structured features (component age, flight hours, environmental exposure, prior repair history) to produce a calibrated probability that the component crosses a regulatory severity threshold within a forecast window.</p>
+        <p class="meta">Source: Product Specifications.pdf §AI/ML Capabilities — Failure Prediction Model (LSTM + XGBoost · 6-12 month prediction horizon · 94% accuracy at 6-month horizon · 87% at 12-month)</p>
+        <p>The split is deliberate. LSTMs are strong at temporal pattern matching but historically weak at calibration — they will tell you a failure is "likely" without telling you how likely in terms a planner can act on. XGBoost is the opposite: excellent at calibrated probability estimates from tabular features, weak at sequence modelling. Stacking them gets the time-series sensitivity of one and the probability discipline of the other.</p>
+        <p>The forecast is reported with the horizon attached. <strong>94% accuracy at a 6-month horizon. 87% at 12 months.</strong> Accuracy drops with horizon — which is what an honest forecasting system should report.</p>
+
+        <h2 class="display-m">Training data: 16+ million flight hours.</h2>
+        <p>Every model claim is a claim about training data. ATLAS Connect's AI models are trained on <strong>16+ million flight hours of commercial aviation data</strong> — a corpus assembled from public airworthiness records, partner MRO histories, and the longitudinal scan archive that every fleet deployment of ATLAS contributes back to. The corpus is the moat. The model architectures are well-known to anyone with a recent NeurIPS subscription; the training data is not.</p>
+        <p class="meta">Source: SOFWERX Whitepaper.pdf §2.3 Automated Deviation Detection — Operational Workflow Phase 3 ("AI models trained on 16M+ flight hours of commercial aviation data"); §7 Conclusion ("AI models trained on 16M+ flight hours")</p>
+        <p>Two things make this corpus useful for prediction in particular. First, it covers <em>multiple inspections of the same hull over time</em> — not a snapshot of 16M aircraft, but the time-ordered record of fewer hulls observed repeatedly. That ordering is what an LSTM can learn from. Second, every entry is paired with the maintenance action that followed — repair, defer, condemn — and the eventual outcome. The model is supervised on what actually happened, not on what a technician thought might happen.</p>
+        <p>The fleet-learning loop runs both ways. Every airframe scanned by a deployed ATLAS unit feeds new inspections back into the next training cycle — a property that single-customer or single-fleet deployments do not have.</p>
+
+        <h2 class="display-m">What a 6-month forecast unlocks.</h2>
+        <p>The question "what will fail in 6 months" sounds abstract until you map it onto the planning calendar of an MRO director. Then it becomes the most actionable piece of data in the building.</p>
+        <p>Three things change once the prediction horizon clears 6 months at acceptable accuracy:</p>
+        <ul>
+          <li><strong>Maintenance moves from unscheduled to scheduled.</strong> An unscheduled maintenance event averages $150,000 per hour against a grounded narrowbody. A scheduled C-check on the same component, planned around fleet utilisation, costs a small fraction of that. Even a modest shift in the unscheduled-to-scheduled ratio compounds across a fleet.</li>
+          <li><strong>Parts are pre-positioned.</strong> A 6-month lead time is long enough to order long-lead components — composite repair kits, OEM-only line-replaceable units, anything from the parts categories that today force airlines into AOG-rate spot purchases. The forecast becomes a parts forecast.</li>
+          <li><strong>Hangar slots clear sequentially.</strong> Fleet planners can sequence airframes by predicted-failure date and slot them through a smaller number of bays in the right order. The bottleneck shifts from "we ran out of hangar capacity" to "we have a model that tells us which hull goes next."</li>
+        </ul>
+        <p>The 12-month horizon at 87% accuracy is useful for capex planning — what does the maintenance reserve need to be next fiscal year — but the 6-month figure is what moves day-to-day operations.</p>
+
+        <div class="pull-quote">
+          Detection without prediction is a faster version of the same job. Prediction with detection is a different job entirely — turning every inspection pass into a decision the planner can act on six months before the failure happens.
+          <cite>— ARACHNID engineering team · ATLAS Connect product note</cite>
+        </div>
+
+        <h2 class="display-m">Validation: what the accuracy numbers actually measure.</h2>
+        <p>Accuracy figures in AI-for-MRO are notoriously easy to inflate. Two methodology notes are worth stating up front.</p>
+        <p><strong>The 98.5% / 96.2% detection figures are precision and recall, not "accuracy."</strong> Precision is the share of flagged defects that turn out to be real. Recall is the share of real defects that the model flagged. The two move against each other — push precision higher and recall typically drops. ATLAS Connect's detection stack reports both, validated against the same 10,000+ image holdout set. That number includes the rare-class defects (delamination, hidden corrosion under coatings) that single-sensor camera systems systematically miss.</p>
+        <p class="meta">Source: Product Specifications.pdf §AI/ML Capabilities — "98.5% precision, 96.2% recall (validated on 10,000+ images)"</p>
+        <p><strong>The 94% / 87% prediction figures are forecast accuracy at named horizons, measured against subsequent observed failures.</strong> A 6-month forecast issued in January is graded in July, when the maintenance log records what actually happened to the component. Forecasts that did not specify which component, or that hedged with "likely within a year," are not counted as hits. The horizon is contractual.</p>
+        <p class="meta">Source: Product Specifications.pdf §AI/ML Capabilities — Failure Prediction Model ("6-12 month prediction horizon · 94% accuracy at 6-month horizon · 87% at 12-month")</p>
+        <p>The other accuracy figure worth naming — system-level — is <strong>&lt;2% false-positive rate</strong> on inspection events end-to-end, against 15–25% for manual visual inspection. False positives are the silent cost of an inspection program: every spurious flag costs a Level III technician's time and erodes operator trust in the AI. Driving that rate below 2% is what makes the autonomous output usable as a maintenance directive rather than a "review queue."</p>
+        <p class="meta">Source: Product Specifications.pdf §Performance Specifications — False Positive Rate (&lt;2% vs. 15-25% manual)</p>
+
+        <h2 class="display-m">Where Dewey sits in the agent stack.</h2>
+        <p>ATLAS Connect runs three named agents on top of every scan, each with a specific job:</p>
+        <ul>
+          <li><strong>Huey</strong> — defect detection. YOLOv8 + Vision Transformer. Real-time call across 50+ defect types.</li>
+          <li><strong>Dewey</strong> — failure prediction. LSTM + XGBoost. 6-month and 12-month horizons.</li>
+          <li><strong>Lewey</strong> — FAA-aligned records. Outputs flow into the customer's repair database, FAA Advisory Circulars, and OEM update feeds. Audit-ready under 14 CFR retention.</li>
+        </ul>
+        <p>Dewey is the agent the maintenance director talks to. The output is not a probability score in isolation — it is a <em>prioritised action list</em>: components ranked by predicted failure date, with the parts requisition, the suggested slot window, and the regulatory rationale already drafted. The human still approves. AI assists; humans approve. That separation of authority is non-negotiable under the FAA pathway ATLAS Connect is built against — and it is also what makes the system deployable inside an existing GMM / CAMP framework without rewriting the manual.</p>
+
+        <h2 class="display-m">Where we go from here.</h2>
+        <p>The current 6-month horizon is the floor, not the ceiling. Three lines of work extend it:</p>
+        <ul>
+          <li><strong>Multi-modal prediction.</strong> Today's prediction model leans on RGB + hyperspectral + thermal. Adding the LiDAR deformation track and radar NDT subsurface track to the LSTM input gives the model temporal signal on defect classes — composite disbonding, internal crack propagation — that are invisible to a camera until they are catastrophic. The detection stack already ingests these modalities; the prediction stack catches up next.</li>
+          <li><strong>Component-level taxonomies.</strong> The current model predicts failure of <em>defect classes on surfaces</em>. The next iteration predicts failure of <em>named components</em> — pylon-attach fitting on the inboard #2 engine, that specific elevator hinge, the lower-fuselage skin panel adjacent to the gear bay. Component-level outputs map directly to part numbers and repair manuals — closing the loop into the MRO software (AMOS, Trax, Rusada, Quantum) without intermediate translation.</li>
+          <li><strong>Cross-fleet transfer learning.</strong> A 737-800 corpus and a CV-22 corpus are different enough that naive transfer fails, but the underlying material science is shared. The roadmap includes a transfer-learning layer that lets a defense fleet benefit from the commercial corpus without exposing the defense data outside its enclave.</li>
+        </ul>
+        <p>None of these extensions require new sensor hardware. The ATLAS sensor head already captures the modalities. What changes is what the agents learn to do with the stream.</p>
+        <p>The shift from detection to prediction is the direction the whole stack is pointed in. Detection is the visible layer; prediction is the layer that makes the detection economically useful. The 94% / 87% horizon accuracy figures are where we are today. The corpus compounds. So do the forecasts.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ RELATED ARTICLES ═════ -->
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Continue reading</p>
+          <h2 class="display-m" style="margin-top: 24px;">More from the team.</h2>
+        </div>
+        <p class="lede">Field notes and technical deep dives on the forces reshaping aircraft maintenance — multi-spectral sensing, the FAA pathway, and the broader inspection super-cycle.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-sensor.jpg" alt="Multi-spectral data pattern" />
+          </div>
+          <header class="card-head"><span class="meta">Technology · June 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">Six Sensors, One Platform: Multi-Spectral vs. Visual-Only Inspection</h3>
+          <p class="desc">Donecle uses one sensor. Gecko uses two. ATLAS integrates six — hyperspectral, LWIR thermal, LiDAR, laser profilometry, radar NDT, polarimetric RGB. A side-by-side detection-capability comparison.</p>
+          <a class="link-cta" href="/blog/six-sensors-one-platform">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-faa.jpg" alt="Helicopter cockpit operation" />
+          </div>
+          <header class="card-head"><span class="meta">Regulatory · July 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The FAA-Records Moat: Why Manuals Integration Is the Hinge</h3>
+          <p class="desc">Seven phases from classification to industry standard. Phase 3 — Manual Integration into GMM/CAMP and RSM/QCM — is where autonomous inspection becomes legally distinguishable from a science experiment.</p>
+          <a class="link-cta" href="/blog/faa-records-moat">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-mro.jpg" alt="MRO industrial machinery" />
+          </div>
+          <header class="card-head"><span class="meta">Industry analysis · April 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The MRO Super Cycle: Why Autonomous Inspection Is Inevitable</h3>
+          <p class="desc">The global MRO market grows from $119.7B to $156B by 2035. The fleet adds 9,300 aircraft. The certified-inspector pool doubles its open headcount. Manual inspection cannot scale through this — here is what changes.</p>
+          <a class="link-cta" href="/blog/mro-super-cycle">Read</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ CTA ═════ -->
+  <section class="cta">
+    <p class="eyebrow" style="margin-bottom: 32px;">[Next step]</p>
+    <h2>See Dewey running on a real fleet.</h2>
+    <p class="sub">Schedule a demonstration at your facility. We will run a live scan, walk you through the detection output, and show you the 6-month forecast Dewey produces for an airframe in your own hangar.</p>
+    <div class="actions">
+      <a class="link-cta link-cta--armed" href="../contact.html">Schedule a Demo</a>
+      <a class="link-cta link-cta--dim" href="../platform.html#connect">Explore ATLAS Connect</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="word">ARACHNID</p>
+          <p class="meta">Autonomous inspection<br/>for aerospace & defense.<br/>HQ Miami, FL · Cincinnati · El Segundo · Melbourne</p>
+          <a class="link-cta" href="../contact.html" style="align-self: flex-start;">Schedule a Demo</a>
+        </div>
+        <div class="foot-col"><h4>Platform</h4><ul><li><a href="../platform.html">ATLAS Robot</a></li><li><a href="../platform.html#sensors">Sensor Head</a></li><li><a href="../platform.html#connect">ATLAS Connect AI</a></li><li><a href="../platform.html#deployment">Deployment</a></li><li><a href="../platform.html#compliance">Compliance</a></li><li><a href="../platform.html#form-factors">VR Headset <span class="coming">Coming Soon</span></a></li></ul></div>
+        <div class="foot-col"><h4>Solutions</h4><ul><li><a href="../aviation.html">Aviation MRO</a></li><li><a href="../defense.html">Defense</a></li><li><a href="../energy.html">Energy</a></li><li><a href="../space.html">Space & Launch</a></li></ul></div>
+        <div class="foot-col"><h4>Resources</h4><ul><li><a href="../resources.html#blog">Blog</a></li><li><a href="../resources.html#faq">FAQ</a></li><li><a href="../resources.html#downloads">Downloads</a></li><li><a href="#">Pricing <span class="coming">TBD</span></a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="../about.html">About</a></li><li><a href="../about.html#team">Team</a></li><li><a href="../about.html#partners">Partners</a></li><li><a href="../contact.html">Contact</a></li><li><a href="#">Careers</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 Arachnid Systems Corporation · Delaware C-Corp</span><span class="right"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">ITAR Notice</a></span></div>
+    </div>
+  </footer>
+  <a class="brand-watermark" href="../index.html" aria-label="Arachnid Systems">
+    <img src="../assets/brand/arachnid-wordmark.avif" alt="ARACHNID" />
+    <span class="wm-label">arachnid systems</span>
+  </a>
+
+  <script type="module" src="../motion.js"></script>
+</body>
+</html>
