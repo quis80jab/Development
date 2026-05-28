@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The FAA-Records Moat: Why Manuals Integration Is the Hinge | Arachnid Systems</title>
+  <meta name="description" content="The 7-phase Caprico pathway from technology to deployable FAA-compliant inspection revenue — and why phase 3, manual integration into GMM/CAMP and RSM/QCM, is the hinge of the entire moat." />
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .article-body { max-width: 72ch; margin: 0 auto; }
+    .article-body p { font-size: 17px; line-height: 28px; color: var(--text); margin: 0 0 20px; }
+    .article-body p.meta { font-size: 12px; line-height: 16px; color: var(--dim); margin: 0 0 32px; }
+    .article-body h2.display-m { margin: 72px 0 24px; }
+    .article-body ol, .article-body ul { margin: 0 0 24px; padding-left: 24px; color: var(--text); }
+    .article-body ol li, .article-body ul li { font-size: 17px; line-height: 28px; margin-bottom: 12px; }
+    .article-body ol li strong, .article-body ul li strong { color: var(--text); }
+    .article-body a { color: var(--text); border-bottom: 1px solid var(--hair-2); }
+    .article-byline { font-family: var(--mono); font-feature-settings: var(--mono-feat); font-size: 12px; letter-spacing: .04em; color: var(--dim); text-transform: uppercase; margin-top: 32px; }
+    .pull-quote { margin: 56px 0; padding: 32px 40px; border-left: 2px solid var(--text); font-weight: 500; font-size: 24px; line-height: 34px; letter-spacing: -.01em; color: var(--text); max-width: 60ch; }
+    @media (max-width: 800px) {
+      .article-body { padding: 0 4px; }
+      .pull-quote { padding: 24px; font-size: 20px; line-height: 28px; }
+    }
+  </style>
+</head>
+<body class="mockup">
+  <div class="mockup-banner">MOCKUP · ARACHNID v0.1 · pre-deployment · review only</div>
+
+  <nav class="nav">
+    <a href="../index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>ARACHNID</a>
+    <div class="nav-links">
+      <a href="../platform.html">Platform</a>
+      <a href="../aviation.html">Solutions</a>
+      <a href="../about.html">About</a>
+      <a href="../resources.html" class="active">Resources</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <a href="../contact.html" class="nav-cta">Schedule a Demo →</a>
+  </nav>
+
+  <!-- ═════ HERO ═════ -->
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Regulatory · July 2026</p>
+      <h1 class="display-l">The FAA-Records Moat:<br/>Why Manuals Integration<br/>Is the Hinge.</h1>
+      <p class="lede">Autonomous inspection is not a hardware race. It is a records race. The technology is necessary but not sufficient — the durable competitive position belongs to whoever first earns a place inside the FAA-accepted aircraft maintenance manuals. Here is the 7-phase pathway, why phase 3 is the hinge, and why ITAR posture turns the moat from defensible into uncopyable.</p>
+      <p class="article-byline">By the ARACHNID Systems team · ~10 min read</p>
+      <div style="margin-top: 64px;">
+        <div class="asset-ph" style="min-height: 380px; padding: 0;">
+          <img src="../assets/photos/unsplash/blog-faa.jpg" alt="Helicopter cockpit and instrumentation — the regulated environment ATLAS enters" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═════ ARTICLE BODY ═════ -->
+  <section class="section">
+    <div class="container">
+      <div class="article-body">
+
+        <h2 class="display-m">The integration thesis.</h2>
+        <p>The autonomous inspection market is crowded with hardware. Six companies — including Donecle, Mainblades, Gecko Robotics, and a clutch of stealth-mode incumbents — are flying drones around airframes and producing high-resolution imagery. None of that, on its own, is allowed to substitute for a certificated mechanic's signature on a maintenance log under 14 CFR Parts 121, 135, or 145. The aircraft does not return to service because somebody captured a beautiful 3D point cloud. The aircraft returns to service because a person with the right authority entered an item in the right log, citing the right manual reference, against the right task card.</p>
+        <p>That is the gap. The defect-detection problem is solved. The records problem is not. And the records problem is what airlines, MROs, lessors, the FAA, the NTSB, and — when something goes wrong — the FBI and the plaintiff's bar actually litigate over. Inspection is a regulatory artifact before it is a technical one.</p>
+        <p>Our thesis is that the durable moat in this category does not come from sensors. It comes from the digital trail of compliance — the records-as-a-service position that compounds with every scan. Whoever wires their output into the FAA-accepted aircraft maintenance manuals first owns the lane. Everyone else is shipping cameras.</p>
+
+        <h2 class="display-m">Mapping inspection output to AMM lines.</h2>
+        <p>Start with what a Part 121 air carrier actually does. The carrier operates under an Operations Specification (OpSpec) issued by the FAA. The OpSpec references a General Maintenance Manual (GMM) and a Continuous Airworthiness Maintenance Program (CAMP). Every recurring inspection — A-check, C-check, lightning-strike conditional, hard-landing conditional — traces back to a task card inside that program. The task card cites the Aircraft Maintenance Manual (AMM) provided by the OEM. The AMM tells the mechanic what tools to use, what acceptance criteria apply, and what data to log on completion.</p>
+        <p>A Part 145 repair station runs on the same architecture under different paperwork: a Repair Station Manual (RSM) and a Quality Control Manual (QCM). A Part 135 on-demand operator runs a smaller version of the same thing. The FAA-accepted manuals — GMM/CAMP, RSM/QCM, plus any operator-specific deviations — define the legal envelope of every inspection performed on a US-registered aircraft.</p>
+        <p>For an autonomous platform to count, two things have to happen. First, the platform's output has to be legible to that manual structure — defect calls, severity classifications, location references, and acceptance criteria all aligned with the AMM taxonomy the OEM and operator already use. Second, the manual itself has to be revised, and the revision has to be accepted by the FAA Principal Maintenance Inspector (PMI) for that operator. Until both steps are complete, an ATLAS scan is a beautiful supplementary dataset. It is not a legally distinguishable inspection.</p>
+        <p class="meta">Source: 14 CFR Parts 121.367–121.369 (GMM/CAMP), 14 CFR Part 145 Subpart D (RSM/QCM), FAA Order 8900.1 Vol. 3.</p>
+
+        <h2 class="display-m">The 7-phase Caprico pathway.</h2>
+        <p>We mapped the pathway with Caprico Consulting Group, the regulatory firm that has shepherded multiple novel inspection technologies through the FAA acceptance process. The output is a deliberate seven-phase plan from classification to industry standard. Each phase has a defined deliverable, a defined counterparty inside the FAA, and a defined dependency on the phase before it. Skipping is not possible. Compressing in places is.</p>
+        <ol>
+          <li><strong>Classification.</strong> FAA alignment on what ATLAS is, and what it is not. We position the platform as an inspection tool and data system — an aid to certificated personnel and a generator of traceable maintenance records. We are deliberately not pursuing a Supplemental Type Certificate (STC) on day one. STC is for aircraft modifications. Our scope is the inspection process and the records artifact, which is a substantially faster lane.</li>
+          <li><strong>Validation and equivalency.</strong> A validation report acceptable to the FAA, demonstrating that ATLAS output is at minimum equivalent to a trained human inspector across the relevant defect taxonomy. The Delta TechOps 90-day pilot on a 737-800 — validated 98.3% accuracy, 23-minute inspection — is the seed data set for this report. The expansion set covers repeatability, false-positive and false-negative rates by defect category, and environmental stress (humidity, temperature, lighting, vibration).</li>
+          <li><strong>Manual integration.</strong> <em>The hinge.</em> FAA-accepted revisions to the customer's GMM/CAMP (for Parts 121 and 135 operators) and RSM/QCM (for Part 145 repair stations) that incorporate ATLAS-generated inspection steps and records into the recurring program. This is the phase where autonomous inspection stops being a science experiment and becomes a legally distinguishable maintenance action. Every subsequent phase compounds on top of an accepted manual. Without it, none of them count.</li>
+          <li><strong>Training and human authority.</strong> Documented training program for the human operators who run the platform and the certificated personnel who sign off on its output. The architectural principle is non-negotiable: AI assists, humans approve. Every ATLAS finding routes through a person with the appropriate Inspection Authorization (IA) or Repairman Certificate before it becomes a return-to-service record. The chain of authority is a regulatory requirement, not a courtesy.</li>
+          <li><strong>Operational approval.</strong> OpSpec revisions granting the operator legal authority to use ATLAS in revenue maintenance operations. This is the phase the airline's commercial team cares about — until OpSpec is in hand, the platform cannot bill against a fleet maintenance program. With OpSpec in hand, the platform is procurable.</li>
+          <li><strong>Data and recordkeeping.</strong> Audit-ready, enforcement-ready records meeting 14 CFR retention requirements with a verifiable chain of custody. Every inspection is logged, every finding is timestamped, every signature is traceable. This is where the records-as-a-service business model lives — the digital trail itself becomes a recurring revenue product, not a side effect of selling robots.</li>
+          <li><strong>Scale and standardization.</strong> Industry adoption — contributions to FAA Advisory Circulars, engagement with SAE and ARINC technical committees, and eventually formal standards that codify autonomous inspection as a recognized inspection methodology. The end state of phase 7 is that the next entrant has to follow the standard we wrote.</li>
+        </ol>
+        <p class="meta">Source: Arachnid Systems Regulations brief (May 2026); Caprico Consulting Group pathway framework; FAA Order 8900.1 (Flight Standards Information Management System).</p>
+
+        <h2 class="display-m">Phase 3 is the hinge — and here is why.</h2>
+        <p>Read the seven phases again and notice what happens at the boundary between phase 2 and phase 3. Phases 1 and 2 are about the technology — classification and validation. They are necessary but they are reproducible. A well-funded competitor can replicate them in eighteen to twenty-four months. Phases 4 through 7 are about scale and customer adoption — they are valuable but they presume phase 3 is done.</p>
+        <p>Phase 3 is where the platform fuses to the customer's regulatory machinery. The GMM/CAMP revision is a document jointly authored by the operator and the technology provider, accepted by the FAA PMI assigned to that operator's certificate. Once accepted, it becomes part of the operator's airworthiness program — the same body of paperwork that, in extremis, the operator defends in front of the NTSB. Replacing an accepted manual reference with a new vendor is not a software switch. It is a re-acceptance process with the regulator, on a regulator's timeline, with a regulator's appetite for documentation. Operators do not change accepted manuals casually. They do it under significant duress, and even then, slowly.</p>
+
+        <div class="pull-quote">
+          "Phases 1 and 2 are about the technology. Phase 3 is where the platform fuses to the customer's regulatory machinery — and where the moat begins to set."
+        </div>
+
+        <p>This is also where the network effect appears. Once ATLAS is in the GMM/CAMP of the first reference operator, that manual becomes the template the FAA has already accepted. The second operator's manual revision references the first. The third references the second. The marginal regulatory friction declines with every additional adoption, and the cost to the new entrant — who has to start at phase 1 against a baseline of accepted-manual precedent that does not include their platform — rises. The moat compounds the same way enterprise SaaS contracts compound, except the switching cost is not data migration. It is FAA-acceptance latency.</p>
+
+        <h2 class="display-m">ITAR and what it means for foreign carriers.</h2>
+        <p>The other half of the moat is ITAR. The International Traffic in Arms Regulations control the export of defense-related technology — the United States Munitions List (USML) is the index. ATLAS sits at the intersection of three USML-relevant categories: multi-sensor fusion (Category XV, spacecraft and related items, depending on end-use), hyperspectral imaging (Category XII, fire control, range finder, optical and guidance systems), and autonomous control software for inspection of defense platforms (Category XV / XVIII depending on application).</p>
+        <p>The architectural posture is ITAR-compatible by design: US-based supply chain, US-person engineering team, AES-256 secure data storage, US-only data residency for defense customers with multi-region options for commercial customers post-2027. Registration is targeted for Q3 2026, ahead of the broader defense prime pilot integration in Q4 2026.</p>
+        <p>The strategic consequence is that ATLAS can serve defense and commercial customers under the same hardware stack while staying export-compliant. For a foreign-headquartered competitor, the inverse problem is structural: the FAA pathway requires US presence and US-person engineering disclosure, and the defense lane requires ITAR registration. The combination is not a process the foreign competitor can buy their way through. They can build the hardware. They cannot, on the same timeline, build the regulatory posture.</p>
+        <p class="meta">Source: 22 CFR Parts 120–130 (ITAR); Arachnid Systems Regulations brief (May 2026), §1 — ITAR posture.</p>
+
+        <h2 class="display-m">Records as a moat.</h2>
+        <p>The records-as-a-service framing is the part of the strategy that does the most work in the long run. Hardware revenue is a one-time event. A scan is a recurring event. A regulatory-grade record is a permanent asset on the operator's airworthiness file — and a defensive asset for the regulator, the insurer, and the OEM.</p>
+        <p>What we sell, once the pathway is complete, is not robots. We sell scans, and the records the scans produce. Every inspection ATLAS performs generates a structured, immutable, chain-of-custody-verified record that flows into the operator's MRO software — AMOS, Trax, Rusada, Quantum — and sits inside the FAA-accepted manual structure described above. Over time, the same record becomes the substrate for predictive maintenance forecasts, fleet-wide deviation analysis, and longitudinal airworthiness tracking. The data layer is the product.</p>
+        <p>This is what compounds. The first hundred scans are a pilot. The first ten thousand scans are a validation set. The first million scans are an industry-defining proprietary corpus. Competitors who arrive in year five with better hardware are competing against ATLAS Connect's accumulated corpus of multi-spectral defect history across a working fleet — a dataset they cannot back-fill at any price.</p>
+
+        <h2 class="display-m">Where competitors fall short.</h2>
+        <p>The competitive landscape is instructive. Donecle, the most visible single-sensor visual-inspection vendor, has flown on commercial widebodies under operator-controlled trials. The output is a defect heatmap, valuable as a triage tool, but the records integration is operator-dependent and not standardized at the FAA level. Mainblades, similar profile, similar gap. Gecko Robotics has deep penetration in the Navy and the energy sector for tank and hull inspection, with a strong ultrasonic stack — but no commercial-aviation FAA pathway, and a sensor architecture optimized for a different problem geometry.</p>
+        <p>The pattern across the competitor set is consistent: the platforms detect, sometimes well, occasionally exceptionally. None has executed the manual-integration phase against a US air carrier under FAA acceptance. The reason is not technical. It is that manual integration is unglamorous, slow, lawyer-heavy work that does not photograph well, does not demo well, and does not raise growth-stage rounds. It is the kind of work that pays compound returns over the second five years of the company's existence — which is the wrong timeline for hardware companies optimizing for the next eighteen months.</p>
+        <p>We are optimizing for the second five years. That is the entire argument.</p>
+
+        <h2 class="display-m">What this means for the next twenty-four months.</h2>
+        <p>The timeline is published in our certification roadmap. Phase 1 classification pursuit begins in Q2 2027, alongside the first commercial pilots running under the existing Part 145 framework. Phase 3 manual integration with the first reference MRO is targeted for Q4 2027 — the hinge moment. Phases 4 and 5 — operational approval for full revenue maintenance use — fall in 2028. ITAR registration is filed Q3 2026 ahead of defense prime integration. CMMC Level 2 third-party assessment is timed to the first prime contract requiring it, projected Q2–Q3 2027.</p>
+        <p>Every milestone in that sequence is a moat deposit. None of them, taken individually, is dramatic. Taken together, in the order shown, they constitute a regulatory position that is not buyable, not partner-able, and not, in any reasonable competitive scenario, catchable. That is the FAA-records moat, and phase 3 is the hinge it swings on.</p>
+        <p class="meta">Source: Arachnid Systems Regulations brief (May 2026), Certification Timeline Summary.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ RELATED ARTICLES ═════ -->
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">Related dispatches</p>
+          <h2 class="display-m" style="margin-top: 16px;">Keep reading.</h2>
+        </div>
+        <p class="lede">Three more from the team on the same arc — the MRO super-cycle that makes autonomous inspection inevitable, the sensor fusion behind the platform, and the AI that turns inspection data into predictive maintenance.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-mro.jpg" alt="MRO industrial machinery" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <header class="card-head"><span class="meta">Industry analysis · April 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The MRO Super Cycle: Why Autonomous Inspection Is Inevitable</h3>
+          <p class="desc">The global MRO market grows from $119.7B to $156B by 2035. Manual inspection cannot scale through it — here is what changes.</p>
+          <a class="link-cta" href="mro-super-cycle.html">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-sensor.jpg" alt="Multi-spectral data pattern" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <header class="card-head"><span class="meta">Technology · June 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">Six Sensors, One Platform: Multi-Spectral vs. Visual-Only Inspection</h3>
+          <p class="desc">Donecle uses one sensor. Gecko uses two. ATLAS integrates six. A side-by-side detection-capability comparison.</p>
+          <a class="link-cta" href="six-sensors-one-platform.html">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-workforce.jpg" alt="Aircraft maintenance technician at work" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+          <header class="card-head"><span class="meta">Workforce · May 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">40,000 Mechanics Short by 2028: The Aviation Workforce Crisis</h3>
+          <p class="desc">North American aviation maintenance is 40,000 technicians short by 2028. Training a certified inspector takes 18–24 months.</p>
+          <a class="link-cta" href="workforce-crisis.html">Read</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ CTA ═════ -->
+  <section class="cta">
+    <p class="eyebrow" style="margin-bottom: 32px;">Talk to engineering</p>
+    <h2>Walk the pathway with us.</h2>
+    <p class="sub">If you are a Part 121 carrier, a Part 145 repair station, or a defense MRO evaluating how autonomous inspection lands inside your existing manual structure — start here. Our engineering and regulatory leads will walk the pathway with your team, against your specific OpSpec and certificate.</p>
+    <div class="actions">
+      <a class="link-cta link-cta--armed" href="../contact.html">Schedule a Demo</a>
+      <a class="link-cta link-cta--dim" href="../resources.html#blog">More dispatches</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="word">ARACHNID</p>
+          <p class="meta">Autonomous inspection<br/>for aerospace &amp; defense.<br/>HQ Miami, FL · Cincinnati · El Segundo · Melbourne</p>
+          <a class="link-cta" href="../contact.html" style="align-self: flex-start;">Schedule a Demo</a>
+        </div>
+        <div class="foot-col"><h4>Platform</h4><ul><li><a href="../platform.html">ATLAS Robot</a></li><li><a href="../platform.html#sensors">Sensor Head</a></li><li><a href="../platform.html#connect">ATLAS Connect AI</a></li><li><a href="../platform.html#deployment">Deployment</a></li><li><a href="../platform.html#compliance">Compliance</a></li><li><a href="../platform.html#form-factors">VR Headset <span class="coming">Coming Soon</span></a></li></ul></div>
+        <div class="foot-col"><h4>Solutions</h4><ul><li><a href="../aviation.html">Aviation MRO</a></li><li><a href="../defense.html">Defense</a></li><li><a href="../energy.html">Energy</a></li><li><a href="../space.html">Space &amp; Launch</a></li></ul></div>
+        <div class="foot-col"><h4>Resources</h4><ul><li><a href="../resources.html#blog">Blog</a></li><li><a href="../resources.html#faq">FAQ</a></li><li><a href="../resources.html#downloads">Downloads</a></li><li><a href="#">Pricing <span class="coming">TBD</span></a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="../about.html">About</a></li><li><a href="../about.html#team">Team</a></li><li><a href="../about.html#partners">Partners</a></li><li><a href="../contact.html">Contact</a></li><li><a href="#">Careers</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 Arachnid Systems Corporation · Delaware C-Corp</span><span class="right"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">ITAR Notice</a></span></div>
+    </div>
+  </footer>
+
+  <a class="brand-watermark" href="../index.html" aria-label="Arachnid Systems">
+    <img src="../assets/brand/arachnid-wordmark.avif" alt="ARACHNID" />
+    <span class="wm-label">arachnid systems</span>
+  </a>
+
+  <script type="module" src="../motion.js"></script>
+</body>
+</html>
