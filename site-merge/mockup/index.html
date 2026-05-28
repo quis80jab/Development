@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arachnid Systems | ATLAS — Autonomous Aircraft Inspection Robot</title>
+  <meta name="description" content="Arachnid Systems builds ATLAS, an autonomous multi-sensor inspection robot for aerospace, defense, energy, and space-launch assets. 18-25 min narrowbody scan at 98% defect-detection accuracy. Validated 98.3% in 23 minutes on a Delta TechOps Boeing 737-800. Active at NASA KSC, AFRL, DIU. ITAR-compliant; FAA Caprico pathway." />
+  <meta name="keywords" content="autonomous aircraft inspection, ATLAS robot, multi-spectral sensor fusion, MRO automation, predictive maintenance, hyperspectral imaging, LWIR thermal inspection, LiDAR inspection, aerospace robotics, defense inspection, ITAR-compliant, FAA records integration, Delta TechOps, NASA Kennedy, AFRL, DIU" />
+  <meta name="author" content="Arachnid Systems Corporation" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Arachnid Systems" />
+  <meta property="og:title" content="ATLAS — Autonomous Aircraft Inspection Robot | Arachnid Systems" />
+  <meta property="og:description" content="One inspection pass replaces 3-4 mechanics × 6+ hours with a 0.5 FTE × 18-25 minute autonomous scan at 98% defect-detection accuracy. Six fused sensor modalities. Validated on Delta TechOps 737-800." />
+  <meta property="og:image" content="https://arachnidsys.com/assets/photos/unsplash/aviation-hero.jpg" />
+  <meta property="og:image:alt" content="Commercial aircraft on approach — ATLAS autonomous inspection coverage" />
+  <meta property="og:url" content="https://arachnidsys.com/" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ATLAS — Autonomous Aircraft Inspection Robot" />
+  <meta name="twitter:description" content="6 fused sensors · 18-25 min full narrowbody scan · 98% accuracy · validated on Delta TechOps 737-800." />
+  <meta name="twitter:image" content="https://arachnidsys.com/assets/photos/unsplash/aviation-hero.jpg" />
+
+  <link rel="canonical" href="https://arachnidsys.com/" />
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ═════ Structured data for GEO / AEO ═════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://arachnidsys.com/#organization",
+        "name": "Arachnid Systems Corporation",
+        "alternateName": ["Arachnid Systems", "ARACHNID"],
+        "url": "https://arachnidsys.com/",
+        "logo": "https://arachnidsys.com/assets/brand/arachnid-wordmark.avif",
+        "description": "Arachnid Systems builds ATLAS, an autonomous multi-sensor inspection robot for aerospace, defense, energy, and space-launch assets. Validated at 98.3% accuracy in 23 minutes on a Delta TechOps Boeing 737-800.",
+        "foundingDate": "2024",
+        "legalName": "Arachnid Systems Corporation",
+        "address": [
+          { "@type": "PostalAddress", "addressLocality": "Miami", "addressRegion": "FL", "addressCountry": "US" },
+          { "@type": "PostalAddress", "addressLocality": "Cincinnati", "addressRegion": "OH", "addressCountry": "US" },
+          { "@type": "PostalAddress", "addressLocality": "El Segundo", "addressRegion": "CA", "addressCountry": "US" },
+          { "@type": "PostalAddress", "addressLocality": "Melbourne", "addressRegion": "FL", "addressCountry": "US" }
+        ],
+        "knowsAbout": [
+          "Autonomous aircraft inspection",
+          "Multi-spectral sensor fusion",
+          "Aviation MRO automation",
+          "Predictive maintenance",
+          "ITAR-compliant robotics",
+          "FAA records integration",
+          "Hyperspectral imaging",
+          "Non-destructive testing"
+        ]
+      },
+      {
+        "@type": "Product",
+        "@id": "https://arachnidsys.com/#atlas",
+        "name": "ATLAS — Autonomous Aerospace Inspection Robot",
+        "brand": { "@id": "https://arachnidsys.com/#organization" },
+        "manufacturer": { "@id": "https://arachnidsys.com/#organization" },
+        "description": "Autonomous multi-sensor robotic inspection platform integrating six modalities — hyperspectral imaging, LWIR thermal, LiDAR, laser profilometry, radar non-destructive testing, and polarimetric RGB — for aircraft, defense vehicles, energy infrastructure, and space-launch assets. 18-25 minute full narrowbody scan at 98% defect-detection accuracy with 0.5 FTE on-site deployment.",
+        "category": "Industrial robotics / non-destructive testing",
+        "image": "https://arachnidsys.com/assets/photos/unsplash/aviation-hero.jpg",
+        "additionalProperty": [
+          { "@type": "PropertyValue", "name": "Scan duration (narrowbody)", "value": "18-25 minutes" },
+          { "@type": "PropertyValue", "name": "Detection accuracy", "value": "98% (validated 98.3% on Delta TechOps 737-800)" },
+          { "@type": "PropertyValue", "name": "Critical-area coverage", "value": "99.5%" },
+          { "@type": "PropertyValue", "name": "Cost per scan", "value": "$163-$325 vs. $1,200-$1,800 manual (73-86% reduction)" },
+          { "@type": "PropertyValue", "name": "Sensor modalities", "value": "6: hyperspectral, LWIR thermal, LiDAR, laser profilometry, radar NDT, polarimetric RGB" },
+          { "@type": "PropertyValue", "name": "AI/ML stack", "value": "YOLOv8 + ViT detection (98.5%/96.2%); LSTM + XGBoost prediction (94%/87%); trained on 16M+ flight hours" },
+          { "@type": "PropertyValue", "name": "Compliance", "value": "ITAR · FAA Caprico 7-phase pathway · Part 135/145 records integration" },
+          { "@type": "PropertyValue", "name": "MRO integration", "value": "AMOS · Trax · Rusada · Quantum" }
+        ]
+      },
+      {
+        "@type": "Service",
+        "name": "Autonomous Aircraft Inspection as a Service",
+        "provider": { "@id": "https://arachnidsys.com/#organization" },
+        "serviceType": "Aircraft inspection · MRO automation · predictive maintenance",
+        "areaServed": ["United States", "International (ITAR-compliant jurisdictions)"],
+        "audience": [
+          { "@type": "BusinessAudience", "audienceType": "Commercial aviation MRO" },
+          { "@type": "BusinessAudience", "audienceType": "Defense (DoD · USAF · Army · SOCOM · Navy)" },
+          { "@type": "BusinessAudience", "audienceType": "Energy infrastructure operators" },
+          { "@type": "BusinessAudience", "audienceType": "Space launch operators" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does Arachnid Systems do?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Arachnid Systems builds ATLAS, an autonomous robotic platform that inspects aircraft, defense vehicles, energy infrastructure, and space-launch assets using six fused sensor modalities. One scan replaces 3-4 mechanics over 6+ hours with a 0.5 FTE, 18-25 minute autonomous pass at 98% defect-detection accuracy."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How fast is an ATLAS aircraft inspection?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ATLAS completes a full narrowbody aircraft scan in 18-25 minutes with 99.5% critical-area coverage. The platform was validated at 23 minutes and 98.3% accuracy on a Delta TechOps Boeing 737-800. Manual inspection methods take 6+ hours and cover only 60-70% of the airframe through sampling."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What sensors does ATLAS use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ATLAS integrates six fused sensor modalities: hyperspectral imaging, LWIR thermal, LiDAR, laser profilometry, radar non-destructive testing, and polarimetric RGB. Multi-spectral fusion detects corrosion under paint, composite delamination, subsurface fatigue, and thermal disbonding that visual-only inspection misses."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where is Arachnid Systems based?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Arachnid Systems is headquartered in Miami, Florida, with operations in Cincinnati, OH; El Segundo, CA; and Melbourne, FL. The company is a Delaware C-Corp and ITAR-compliant."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which customers and pilots is ATLAS validated with?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Delta TechOps (90-day pilot complete; 98.3% accuracy on 737-800), FEAM Aero pilots underway, NASA Kennedy Space Center (active Artemis-tied pilot), AFRL (hyperspectral composite analysis R&D), DIU (F-35 depot-level inspection evaluation), and a 20-aircraft commercial lessor LOI for fleet evaluation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does ATLAS predict failures before they happen?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "ATLAS Connect — the predictive-maintenance layer — uses YOLOv8 plus Vision Transformer models for defect detection (98.5%/96.2%) and LSTM plus XGBoost models for failure prediction (94%/87%) trained on more than 16 million flight hours of commercial aviation data. The platform forecasts component failures up to six months ahead."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="mockup">
+
+  <div class="mockup-banner">MOCKUP · ARACHNID v0.1 · pre-deployment · review only</div>
+
+  <!-- ═════ NAV ═════ -->
+  <nav class="nav">
+    <a href="index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>ARACHNID</a>
+    <div class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="aviation.html">Solutions</a>
+      <a href="about.html">About</a>
+      <a href="resources.html">Resources</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <a href="contact.html" class="nav-cta">Schedule a Demo →</a>
+  </nav>
+
+  <!-- ═════ HERO ═════ -->
+  <header class="hero hero--photo" id="top" itemscope itemtype="https://schema.org/Organization">
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="container hero-container">
+      <p class="eyebrow" style="margin-bottom: 24px;">[01] Autonomous aerospace &amp; defense inspection · validated 2026</p>
+      <h1 class="hero-title">Every Surface.<br/>Every Defect.<br/><span class="alt">Every Time.</span></h1>
+
+      <div class="hero-lede">
+        <p class="hero-sub">
+          <strong itemprop="name">Arachnid Systems</strong> is an autonomous robotics company building <strong>ATLAS</strong>, a multi-sensor inspection platform for aerospace, defense, energy, and space-launch assets. One ATLAS scan replaces three to four mechanics over six-plus hours of manual work with a <strong>0.5 FTE, 18-to-25-minute autonomous pass</strong> at <strong>98% defect-detection accuracy</strong>. The platform is validated on a Delta TechOps Boeing 737-800 at <strong>98.3% accuracy in a 23-minute cycle</strong>, with FEAM Aero pilots underway in parallel. Customers do not buy a robot — they buy scans. Pricing replaces a $1,200-$1,800 manual narrowbody inspection with <strong>$163-$325 per autonomous scan</strong>, a 73-86% cost reduction at fleet scale.
+        </p>
+        <p class="hero-sub">
+          ATLAS integrates <strong>six fused sensor modalities</strong> — hyperspectral imaging, LWIR thermal, LiDAR, laser profilometry, radar non-destructive testing, and polarimetric RGB — into a single autonomous pass. It sees what visual-only inspection cannot: corrosion under paint, composite delamination, subsurface fatigue, thermal disbonding. Outputs flow into <strong>AMOS, Trax, Rusada, and Quantum</strong> MRO systems as audit-ready records with a blockchain-verified Part 135 / 145 trail, and into <strong>ATLAS Connect</strong> — our predictive-maintenance service that forecasts component failures up to six months out using LSTM and XGBoost models trained on <strong>16M+ flight hours</strong> of commercial aviation data.
+        </p>
+        <p class="hero-sub">
+          Headquartered in <strong>Miami, Florida</strong>, with operations in Cincinnati, El Segundo, and Melbourne, Arachnid Systems was founded by five operators from Lockheed Martin, NASA, Apple, Tesla, USAF, Oracle, Nokia, and Epic Games. ATLAS is <strong>active at NASA Kennedy Space Center</strong> on an Artemis-tied pilot, <strong>under evaluation at AFRL</strong> for hyperspectral composite analysis, and at <strong>DIU</strong> for F-35 depot-level inspection, with a 20-aircraft lessor LOI signed for commercial fleet evaluation. The company is <strong>ITAR-compliant</strong> and on the seven-phase <strong>FAA Caprico</strong> approval pathway. Schedule a live demo to see exactly what ATLAS detects, and what manual inspection leaves behind.
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <a href="contact.html" class="link-cta">Schedule a Demo</a>
+        <a href="platform.html" class="link-cta link-cta--dim">See the Platform</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═════ LOGO BAR ═════ -->
+  <section class="logobar">
+    <div class="container">
+      <p class="meta label">Developed by people from the cutting edge of technology and manufacturing</p>
+      <div class="row">
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/apple.webp" alt="Apple"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/tesla.avif" alt="Tesla"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/oracle.webp" alt="Oracle"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/nokia.avif" alt="Nokia"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/tmobile.avif" alt="T-Mobile"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/unreal.webp" alt="Unreal Engine"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/nasa-jpl.avif" alt="NASA JPL"/></div>
+        <div class="cell"><img class="logo-img logo-white" src="assets/logos/reddot.webp" alt="Red Dot Design Award"/></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ PLATFORM OVERVIEW ═════ -->
+  <section class="section" id="platform-overview">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[02] The Platform</p>
+          <h2 class="display-l" style="margin-top: 24px;">One Robot. Six Sensors.<br/>Complete Visibility.</h2>
+        </div>
+        <p class="lede">ATLAS integrates six sensor modalities into a single autonomous platform — replacing fragmented inspection tooling with one system that sees surface, subsurface, and structural defects in a single pass.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <header class="card-head"><span class="meta">01</span></header>
+          <h3 class="name">Six-Modality Sensor Fusion</h3>
+          <p class="desc">Hyperspectral · LWIR thermal · LiDAR · laser profilometry · radar-based NDT · polarimetric RGB — fused in a single autonomous pass. <strong>24-36 months ahead of nearest viable competitor</strong> in multi-sensor fusion.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">02</span></header>
+          <h3 class="name">18-Minute Full Scan</h3>
+          <p class="desc">Complete narrowbody inspection in 18-25 minutes with 99.5% surface coverage. <strong>Validated on Delta TechOps 737-800: 23-minute scan, 98.3% accuracy.</strong> Manual methods take 6+ hours and cover 60-70% through sampling.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">03</span></header>
+          <h3 class="name">ATLAS Connect — Records as a Service</h3>
+          <p class="desc">Audit-ready records and predictive-maintenance outputs become subscription revenue once data has legal standing under FAA-accepted manuals. <strong>ITAR + FAA = a moat competitors cannot simply buy.</strong></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ HOW IT WORKS ═════ -->
+  <section class="section section--alt" id="how">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[03] How it works</p>
+          <h2 class="display-l" style="margin-top: 24px;">Deploy. Scan. Predict.</h2>
+        </div>
+        <p class="lede">From asset to actionable report in under twenty minutes. No scaffolding. No confined-space permits. No specialist crew.</p>
+      </header>
+
+      <div class="steps">
+        <div class="step">
+          <span class="num">01</span>
+          <h3 class="name">Deploy ATLAS</h3>
+          <p class="desc">Position the autonomous platform at your asset. ATLAS navigates aircraft exteriors and high-value infrastructure surfaces without manual guidance. 0.5 FTE on-site. Setup in minutes.</p>
+        </div>
+        <div class="step">
+          <span class="num">02</span>
+          <h3 class="name">Scan with Six Modalities</h3>
+          <p class="desc">A single autonomous pass — hyperspectral, LWIR thermal, LiDAR, laser profilometry, radar NDT, and polarimetric RGB — fused on-device. No human in the loop for the scan itself. One pass, complete data.</p>
+        </div>
+        <div class="step">
+          <span class="num">03</span>
+          <h3 class="name">Predict and Act</h3>
+          <p class="desc">ATLAS Connect — backed by digital agents <em>Huey · Dewey · Lewey</em> — turns the scan into FAA-aligned records, prioritised repair orders, and predictive-maintenance signals. Subscription revenue starts the moment data has legal standing.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 32px;">
+        <!-- Asset H3 placeholder: 3-step illustration triptych -->
+        <div class="asset-ph asset-ph--wide">
+          <div>
+            <span class="id">H3</span>
+            <p class="lbl">3-step illustration triptych — Deploy → Scan → Predict</p>
+            <span class="src">SVG, hairline brutalist style</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ METRICS BAR ═════ -->
+  <section class="section" id="metrics">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[04] Proven results</p>
+          <h2 class="display-l" style="margin-top: 24px;">The numbers behind every scan.</h2>
+        </div>
+        <p class="lede">Every claim on this page is backed by an internal benchmark or peer-reviewed source. <a href="#" style="color: var(--text); border-bottom: 1px solid var(--hair-2);">See methodology</a>.</p>
+      </header>
+
+      <div class="metrics">
+        <div class="metric">
+          <p class="val">98%</p>
+          <p class="lbl">Detection accuracy</p>
+          <p class="ctx">Validated 98.3% on Delta TechOps 737-800 · &lt;3% false positives</p>
+        </div>
+        <div class="metric">
+          <p class="val">18-25 min</p>
+          <p class="lbl">Full narrowbody scan</p>
+          <p class="ctx">0.5 FTE replaces 3-4 mechanics × 6+ hours</p>
+        </div>
+        <div class="metric">
+          <p class="val">99.5%</p>
+          <p class="lbl">Critical-area coverage</p>
+          <p class="ctx">vs. 60-70% with manual sampling-based inspection</p>
+        </div>
+        <div class="metric">
+          <p class="val">73-86%</p>
+          <p class="lbl">Cost reduction</p>
+          <p class="ctx">$163-$325 per inspection vs. $1,200-$1,800 manual</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ INDUSTRIES ═════ -->
+  <section class="section section--alt" id="industries">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[05] Industries</p>
+          <h2 class="display-l" style="margin-top: 24px;">Built for industries where inspection<br/>failure is not an option.</h2>
+        </div>
+        <p class="lede">ATLAS adapts its modular sensor head to the specific requirements of each vertical — same platform, mission-specific configurations.</p>
+      </header>
+
+      <div class="cards cards--4">
+        <article class="card">
+          <header class="card-head"><span class="meta">Aviation</span></header>
+          <div class="asset-ph" style="min-height: 160px; margin-bottom: 8px;">
+            <img class="photo-card" src="assets/photos/unsplash/aviation-card.jpg" alt="Commercial airliner at takeoff" />
+          </div>
+          <h3 class="name">Commercial Aviation MRO</h3>
+          <p class="desc">Full narrowbody inspection in 18-25 min. 99.5% critical-area coverage catches corrosion, fatigue cracks, and delamination that manual sampling misses. Delta TechOps pilot complete.</p>
+          <a href="aviation.html" class="link-cta">Explore Aviation</a>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Defense</span></header>
+          <div class="asset-ph" style="min-height: 160px; margin-bottom: 8px;">
+            <img class="photo-card" src="assets/photos/unsplash/defense-card.jpg"  alt="Chinook helicopter" />
+          </div>
+          <h3 class="name">Defense & National Security</h3>
+          <p class="desc">ITAR-compliant autonomous inspection for military aircraft and depot infrastructure. NASA KSC, AFRL, DIU active. Army · SOCOM · Navy · USAF demos scheduled.</p>
+          <a href="defense.html" class="link-cta">Explore Defense</a>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Energy</span></header>
+          <div class="asset-ph" style="min-height: 160px; margin-bottom: 8px;">
+            <img class="photo-card" src="assets/photos/unsplash/energy-card.jpg"   alt="Industrial pipe array" />
+          </div>
+          <h3 class="name">Energy & Infrastructure</h3>
+          <p class="desc">Pipelines, pressure vessels, wind turbines, power plants. Six sensors detect corrosion, wall thinning, and weld defects before failures cause outages.</p>
+          <a href="energy.html" class="link-cta">Explore Energy</a>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Space</span></header>
+          <div class="asset-ph" style="min-height: 160px; margin-bottom: 8px;">
+            <img class="photo-card" src="assets/photos/unsplash/space-card.jpg"    alt="Space Shuttle launch" />
+          </div>
+          <h3 class="name">Space & Launch</h3>
+          <p class="desc">Launch vehicle structures, pad infrastructure, and ground support equipment inspected at the speed of your launch cadence. NASA KSC Artemis-tied pilot active. Vandenberg targeted.</p>
+          <a href="space.html" class="link-cta">Explore Space</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ OUTCOMES FRAMEWORK ═════ -->
+  <section class="section" id="outcomes">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[06] What ATLAS gives you</p>
+          <h2 class="display-l" style="margin-top: 24px;">Universal sensor head<br/>+ fleet learning.</h2>
+        </div>
+        <p class="lede">A single platform that compounds with every airframe scanned. Customers do not buy a robot — <strong>they buy scans</strong>. Each scan flows through one universal sensor head, fed by the network of every deployed unit, and ends in four operating outcomes:</p>
+      </header>
+
+      <div class="cards cards--4">
+        <article class="card">
+          <header class="card-head"><span class="meta">Outcome 01</span></header>
+          <h3 class="name">Retained Knowledge</h3>
+          <p class="desc">AI models trained on <strong>16M+ flight hours</strong> of commercial aviation data. Every scan compounds the network. Each new airframe makes the next inspection sharper.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Outcome 02</span></header>
+          <h3 class="name">See Invisible Damage</h3>
+          <p class="desc">Six fused modalities find what cameras and human inspectors miss — corrosion under paint, composite delamination, subsurface fatigue, thermal disbonding.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Outcome 03</span></header>
+          <h3 class="name">Immediate Compliance</h3>
+          <p class="desc">Audit-ready records flow directly into <strong>AMOS · Trax · Rusada · Quantum</strong> MRO systems, with a blockchain-verified trail for Part 135 / 145 inspections.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Outcome 04</span></header>
+          <h3 class="name">Cost Avoidance</h3>
+          <p class="desc"><strong>98% of unscheduled maintenance prevented</strong> at fleet scale — <strong>$44.7 billion</strong> in lost revenue and unplanned repair spend avoided industry-wide.</p>
+        </article>
+      </div>
+
+      <div style="margin-top: 56px; padding: 40px; border: 1px solid var(--hair); background: var(--bg-2); text-align: center;">
+        <p class="meta" style="margin-bottom: 16px;">Business model</p>
+        <p class="display-m" style="margin-bottom: 16px;">We don't sell robots.<br/>We sell scans.</p>
+        <p class="lede" style="max-width: 60ch; margin: 0 auto;">Recurring revenue · growing moat · proprietary data. Annuals, scan volume, large contracts, and scale economics compound — projected to a <strong>$3.2B revenue stream in 2029</strong>.</p>
+      </div>
+      <p class="meta" style="margin-top: 16px;">Source: DR/UPLOAD/03 Product and Technology/Technology Primer.pdf · SOFWERX Whitepaper</p>
+    </div>
+  </section>
+
+  <!-- ═════ SOCIAL PROOF ═════ -->
+  <section class="section" id="proof">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[07] Already deployed</p>
+          <h2 class="display-l" style="margin-top: 24px;">Already in the hands of those<br/>who demand the most.</h2>
+        </div>
+        <p class="lede">Built by five co-founders from <strong>Lockheed Martin · NASA · Apple · Tesla · USAF · Oracle · Nokia · Epic Games</strong> — shipped real hardware inside the organisations that already run aerospace and defense.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <header class="card-head"><span class="meta">Validated · commercial</span></header>
+          <h3 class="name">Delta TechOps — pilot complete</h3>
+          <p class="desc"><strong>98.3% accuracy, 23-minute inspection on a 737-800.</strong> 90-day pilot completed. Q2 2026 trials converting to billable. FEAM Aero pilots underway in parallel.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Active · government</span></header>
+          <h3 class="name">NASA KSC · AFRL · DIU</h3>
+          <p class="desc"><strong>NASA Kennedy:</strong> active Artemis-tied spacecraft infrastructure pilot. <strong>AFRL:</strong> active hyperspectral composite analysis R&amp;D. <strong>DIU:</strong> under evaluation for F-35 depot-level inspection. Army · SOCOM · Navy · USAF demos scheduled.</p>
+        </article>
+        <article class="card">
+          <header class="card-head"><span class="meta">Pipeline · commercial</span></header>
+          <h3 class="name">20-Aircraft Lessor LOI</h3>
+          <p class="desc">Major narrowbody lessor — <strong>LOI signed for a 20-aircraft portfolio evaluation</strong>. Boeing exploratory, actionable post-FAA approval. Vandenberg support infrastructure contracts targeted.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ RESOURCES TEASER ═════ -->
+  <section class="section section--alt" id="resources">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[08] Insights</p>
+          <h2 class="display-l" style="margin-top: 24px;">Latest from the team.</h2>
+        </div>
+        <p class="lede">Field notes on the MRO super-cycle, sensor fusion, and the road to predictive maintenance.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <div class="photo-frame" style="aspect-ratio: 3/2; margin-bottom: 8px;">
+            <img class="photo-blog" src="assets/photos/unsplash/blog-mro.jpg" alt="MRO industrial machinery" />
+          </div>
+          <header class="card-head"><span class="meta">Industry analysis</span></header>
+          <h3 class="name" style="font-size:22px;line-height:26px;">The MRO Super Cycle: Why Autonomous Inspection Is Inevitable</h3>
+          <p class="desc">The global MRO market grows from $119.7B to $156B by 2035. Manual inspection cannot scale with it. Here is what changes.</p>
+          <a class="link-cta" href="/blog/mro-super-cycle">Read</a>
+        </article>
+        <article class="card">
+          <div class="photo-frame" style="aspect-ratio: 3/2; margin-bottom: 8px;">
+            <img class="photo-blog" src="assets/photos/unsplash/blog-sensor.jpg" alt="Multi-spectral data pattern" />
+          </div>
+          <header class="card-head"><span class="meta">Technology</span></header>
+          <h3 class="name" style="font-size:22px;line-height:26px;">Six Sensors, One Platform: Multi-Spectral vs. Visual-Only</h3>
+          <p class="desc">Donecle uses one sensor. Gecko uses two. ATLAS integrates six. A technical comparison of detection capabilities across modalities.</p>
+          <a class="link-cta" href="/blog/six-sensors-one-platform">Read</a>
+        </article>
+        <article class="card">
+          <div class="photo-frame" style="aspect-ratio: 3/2; margin-bottom: 8px;">
+            <img class="photo-blog" src="assets/photos/unsplash/blog-ai.jpg" alt="Server room data infrastructure" />
+          </div>
+          <header class="card-head"><span class="meta">Product deep dive</span></header>
+          <h3 class="name" style="font-size:22px;line-height:26px;">From Detection to Prediction: Forecasting Failures 6 Months Out</h3>
+          <p class="desc">LSTM and XGBoost models trained on inspection data achieve 94% accuracy at a 6-month prediction horizon. Inside the AI behind ATLAS.</p>
+          <a class="link-cta" href="/blog/detection-to-prediction">Read</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ FINAL CTA ═════ -->
+  <section class="cta">
+    <p class="eyebrow" style="margin-bottom: 32px;">[09] Get started</p>
+    <h2>See what your current inspection is missing.</h2>
+    <p class="sub">Schedule a live demo with our engineering team. We will show you exactly what ATLAS detects — and what manual methods leave behind.</p>
+    <div class="actions">
+      <a class="link-cta link-cta--armed" href="contact.html">Schedule a Demo</a>
+      <a class="link-cta link-cta--dim" href="contact.html#pilot">Join the Pilot Program</a>
+    </div>
+  </section>
+
+  <!-- ═════ FOOTER ═════ -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="word">ARACHNID</p>
+          <p class="meta">Autonomous inspection<br/>for aerospace & defense.<br/>HQ Miami, FL · Cincinnati · El Segundo · Melbourne</p>
+          <a class="link-cta" href="contact.html" style="align-self: flex-start;">Schedule a Demo</a>
+        </div>
+        <div class="foot-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="platform.html">ATLAS Robot</a></li>
+            <li><a href="platform.html#sensors">Sensor Head</a></li>
+            <li><a href="platform.html#connect">ATLAS Connect AI</a></li>
+            <li><a href="platform.html#deployment">Deployment Models</a></li>
+            <li><a href="platform.html#compliance">Compliance</a></li><li><a href="platform.html#form-factors">VR Headset <span class="coming">Coming Soon</span></a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="aviation.html">Aviation MRO</a></li>
+            <li><a href="defense.html">Defense</a></li>
+            <li><a href="energy.html">Energy & Infrastructure</a></li>
+            <li><a href="space.html">Space & Launch</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="resources.html#blog">Blog</a></li>
+            <li><a href="resources.html#faq">FAQ</a></li>
+            <li><a href="resources.html#downloads">Downloads</a></li>
+            <li><a href="#">Pricing <span class="coming">TBD</span></a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="about.html#team">Team</a></li>
+            <li><a href="about.html#partners">Partners</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Arachnid Systems Corporation · Delaware C-Corp · All rights reserved.</span>
+        <span class="right">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">ITAR Notice</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="brand-watermark" href="index.html" aria-label="Arachnid Systems">
+    <img src="assets/brand/arachnid-wordmark.avif" alt="ARACHNID" />
+    <span class="wm-label">arachnid systems</span>
+  </a>
+
+  <script type="module" src="motion.js"></script>
+</body>
+</html>
