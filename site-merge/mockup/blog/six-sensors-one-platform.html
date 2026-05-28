@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Six Sensors, One Platform: Multi-Spectral vs. Visual-Only Inspection | Arachnid Systems</title>
+  <meta name="description" content="Single-sensor visual inspection misses subsurface corrosion, composite delamination, and stress patterns by design. ATLAS fuses six sensor modalities — hyperspectral, LWIR thermal, LiDAR, laser profilometry, radar NDT, polarimetric RGB — to close the detection gap." />
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="mockup">
+  <div class="mockup-banner">MOCKUP · ARACHNID v0.1 · pre-deployment · review only</div>
+
+  <nav class="nav">
+    <a href="../index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>ARACHNID</a>
+    <div class="nav-links">
+      <a href="../platform.html">Platform</a>
+      <a href="../aviation.html">Solutions</a>
+      <a href="../about.html">About</a>
+      <a href="../resources.html" class="active">Resources</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <a href="../contact.html" class="nav-cta">Schedule a Demo →</a>
+  </nav>
+
+  <!-- ═════ HERO ═════ -->
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Technology · June 2026</p>
+      <h1 class="display-l">Six Sensors,<br/>One Platform.<br/>Multi-Spectral vs.<br/>Visual-Only Inspection.</h1>
+      <p class="lede"><strong>By the ARACHNID Systems team · ~12 min read.</strong> A camera-only drone can find a paint scratch. It cannot find the corrosion behind the paint, the delamination under the composite skin, or the stress riser inside the radius of a hat-stringer. Those defects are the ones that ground fleets. Here is why ATLAS carries six sensor modalities instead of one — and what each of the other five sees that a camera, by physics, cannot.</p>
+
+      <div style="margin-top: 64px;">
+        <img class="photo-blog" src="../assets/photos/unsplash/blog-sensor.jpg" alt="Multi-spectral sensor data pattern" style="width:100%; max-height: 520px; object-fit: cover;" />
+      </div>
+    </div>
+  </header>
+
+  <!-- ═════ ARTICLE BODY ═════ -->
+  <section class="section">
+    <div class="container">
+      <div class="article-body">
+
+        <h2 class="display-m">The single-sensor ceiling.</h2>
+
+        <p>Every inspection paradigm in service today carries an implicit physical assumption: that the defect of interest is visible somewhere in the electromagnetic spectrum the sensor was built to see. For a hand-held flashlight and a Level III inspector with a magnifier, that means roughly 400–700 nanometers of reflected daylight off the surface of the airframe. For a camera-equipped drone like the first generation of inspection platforms, it is the same 400–700 nm — just with more pixels and a longer arm.</p>
+
+        <p>The problem is that the defects most likely to ground an aircraft are not in that band. <strong>Boeing 737 MAX, 2019:</strong> a $30 fastener defect cascaded into $35 billion of losses and a global fleet grounding. The fastener was visible. Its failure mode — fatigue cracking initiated by a torque-spec deviation — was not, at least not with the human eye and not until the load path had already begun to migrate.</p>
+
+        <p>This is the limitation of visual-only inspection stated as honestly as we can state it: <strong>cameras detect the symptom only after the damage is visible. By the time a defect is visible to a camera, it has already propagated.</strong> Cracks under paint, corrosion under sealant, moisture trapped in honeycomb core, disbonded composite plies — all of these progress for weeks or months before they surface. The certified visual inspection regime catches them eventually, at the cost of a 2- to 4-hour walk-around for a narrowbody and 6- to 20-plus hours for a widebody or military transport. That cost is what the autonomous inspection category was meant to compress.</p>
+
+        <p>Compressing inspection time with a single camera, though, does not change the physics. It only moves the same incomplete data faster. Donecle, Mainblades, and the first wave of operator-piloted inspection drones report defect-detection rates of <strong>70–85%</strong> at minimum detectable defect sizes of 0.5–2 mm. Better than a human walk-around on coverage — 85–95% versus 60–70% — but the missed defects are the same defects the human missed. They are not visible.</p>
+
+        <p class="meta">Sources: Donecle and Mainblades described in ARACHNID SOFWERX Whitepaper §2.2 (December 2025). 737 MAX precedent and inspection-paradigm metrics from the same source, §1.2 and §2.1.</p>
+
+        <h2 class="display-m">What each modality actually sees.</h2>
+
+        <p>Multi-spectral fusion is not a marketing term. It is the deliberate choice to instrument every band of the electromagnetic spectrum where airframe defects produce a measurable signal — and then to register all six signal streams against a single geometric reference so the AI can correlate them point-for-point. The ATLAS sensor head carries six modalities on a single 6-DOF stabilised gimbal, processed on-device on an NVIDIA Jetson AGX Orin. Here is what each one actually does.</p>
+
+        <div class="cards cards--3" style="margin-top: 40px;">
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 01 · Hyperspectral</span></header>
+            <h3 class="name">Material composition.</h3>
+            <p class="desc">150+ spectral bands across VIS–SWIR (Headwall Nano / Specim FX17). Each pixel returns a full spectrum, not three colour channels. Corrosion under paint, coating breakdown, contaminated composite plies, and stealth-coating integrity all carry distinctive spectral signatures invisible to RGB. Lead modality on the AFRL R&amp;D collaboration on composite analysis.</p>
+          </article>
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 02 · LWIR Thermal</span></header>
+            <h3 class="name">Subsurface heat.</h3>
+            <p class="desc">640 × 512 px long-wave infrared (FLIR A615) over a −20 °C to 350 °C range. Trapped moisture in honeycomb, disbonded composite plies, insulation failures, hydraulic leaks, and electrical-bus hotspots all radiate. Thermal sees through paint into the structure beneath, especially under solar load or active stimulation.</p>
+          </article>
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 03 · LiDAR</span></header>
+            <h3 class="name">3D geometric truth.</h3>
+            <p class="desc">~300,000 points per second (Ouster OS1-128). Builds the geometric backbone the other five modalities register against. Dent depth, panel waviness, dimensional drift after a hard landing, deformation under load — all quantified as distances in space, not interpreted from a 2D image.</p>
+          </article>
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 04 · Laser Profilometry</span></header>
+            <h3 class="name">Micro-surface metrology.</h3>
+            <p class="desc">0.01 mm precision (Keyence LJ-X8000). Where LiDAR maps the airframe in metres, profilometry maps a 100-mm strip of skin in microns. Erosion of leading-edge coatings, pitting corrosion at the floor of a fastener head, micro-cracking at a panel edge — quantified as a surface profile, not a pixel.</p>
+          </article>
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 05 · Radar NDT</span></header>
+            <h3 class="name">Through the skin.</h3>
+            <p class="desc">Ultra-wideband and millimetre-wave radar, custom integration. Where the other modalities stop at the painted surface, radar penetrates several inches into composite and honeycomb. Internal corrosion in a wing-box, voids in a bonded joint, moisture between plies — the defects that historically required a coupon cut to confirm.</p>
+          </article>
+          <article class="card">
+            <header class="card-head"><span class="meta">Modality 06 · Polarimetric RGB</span></header>
+            <h3 class="name">Stress visible in light.</h3>
+            <p class="desc">Multi-polarisation visible-spectrum imaging (Lucid Phoenix Triton Pol). Recovers a fourth channel — polarisation orientation — that ordinary RGB discards. Stress concentrations near rivet holes, hairline surface cracking, paint-system integrity, and reflectance anomalies all express in polarisation before they express in intensity.</p>
+          </article>
+        </div>
+
+        <p class="meta" style="margin-top: 24px;">Source: ATLAS Sensor Head specification, Platform reference (Arachnid Systems, April 2026). Vendor selections current as of the production sensor-head revision. All six modalities are fused on a single 6-DOF stabilised gimbal and processed on-device.</p>
+
+        <h2 class="display-m">Which defects need which sensor.</h2>
+
+        <p>The honest framing of multi-spectral fusion is not that any one sensor is uniquely magical. It is that <strong>no single sensor detects every defect class.</strong> Each modality has a domain where it is the right instrument and several domains where it is not. A platform that carries only one sensor is choosing, by design, to miss the defects outside that sensor's domain. A platform that carries six is choosing to instrument the whole problem.</p>
+
+        <p>Mapped against the defect taxonomy aligned with Aircraft Maintenance Manuals (AMMs), the assignment looks like this:</p>
+
+        <ul>
+          <li><strong>Surface cracks &amp; missing fasteners</strong> — Polarimetric RGB (primary), LiDAR (geometric confirmation). What a human inspector finds well; what a camera-only platform also finds well.</li>
+          <li><strong>Dent depth &amp; panel waviness</strong> — LiDAR (primary), Laser Profilometry (high-resolution detail at fastener-head scale). The geometric defects.</li>
+          <li><strong>Corrosion under paint</strong> — Hyperspectral (primary), LWIR Thermal (confirmation via moisture/heat differential). RGB cannot see it. This is the defect class that fails camera-only platforms most often.</li>
+          <li><strong>Composite delamination &amp; disbond</strong> — LWIR Thermal (primary), Radar NDT (subsurface depth), Hyperspectral (ply contamination). All three together; no single modality is definitive.</li>
+          <li><strong>Trapped moisture in honeycomb core</strong> — LWIR Thermal (primary), Radar NDT (confirmation). Invisible to RGB; thermal lights it up under solar load.</li>
+          <li><strong>Coating erosion &amp; pitting corrosion</strong> — Laser Profilometry (primary), Hyperspectral (chemistry of the coating residue).</li>
+          <li><strong>Stress concentration around rivet patterns</strong> — Polarimetric RGB (primary). The fourth optical channel ordinary cameras throw away.</li>
+          <li><strong>Internal corrosion in wing-box and stringers</strong> — Radar NDT (primary). The defect class that has historically required an X-ray or a coupon cut.</li>
+        </ul>
+
+        <p>Read the list backwards and the case for fusion becomes obvious. Of eight defect categories, only the first — surface cracks and missing fasteners — is detected reliably by a single-sensor visual platform. The other seven need at least two modalities to be classified with confidence, and four of the eight depend on a modality that no camera-only system carries at all.</p>
+
+        <p class="meta">Source: ARACHNID Product Specifications (February 2026) — sensor-to-defect mapping derived from Multi-Spectral Sensor Head and AI/ML Capabilities sections; defect taxonomy aligned with aircraft maintenance manuals per SOFWERX Whitepaper §2.3.</p>
+
+        <blockquote class="pull-quote">
+          Of eight defect classes that ground commercial aircraft, exactly one is reliably found by a camera alone. A single-sensor platform is not a smaller version of a multi-spectral platform — it is a different category of instrument.
+          <cite>ATLAS Engineering · Sensor-Fusion Note 6.2</cite>
+        </blockquote>
+
+        <h2 class="display-m">How fusion produces the 98.5% number.</h2>
+
+        <p>The reason multi-spectral fusion outperforms single-sensor inspection is not that each modality is individually better than a camera. Several are not — a 640 × 512 thermal frame has far fewer pixels than an off-the-shelf 24-megapixel RGB sensor. The advantage is that <strong>the modalities are statistically independent.</strong> A defect that is ambiguous in one band tends to be unambiguous in another, and the AI is trained to compare every band against every other band before it calls a defect.</p>
+
+        <p>Concretely: a region of skin shows a faint colour shift in hyperspectral, a 0.3 °C temperature differential in LWIR, no LiDAR deviation, and a polarisation rotation along the long axis. Each signal on its own would not pass the false-positive threshold. Taken together — the pattern is consistent with sub-surface moisture intrusion under a paint-system pinhole. Confidence rises with each modality that agrees; ambiguity collapses with each modality that disagrees. This is the principle the AI stack exploits.</p>
+
+        <p>The AI stack itself is a YOLOv8 + Vision Transformer fusion for defect detection and a LSTM + XGBoost combination for failure prediction. The validation set is 10,000+ annotated images across 50+ defect types — cracks, corrosion, delamination, dents, missing fasteners, coating breakdown, and the long tail of less common failure modes. On that validation set, the production model returns <strong>98.5% precision and 96.2% recall, with a false-positive rate under 2%.</strong> Manual inspection by a certified Level III inspector returns 60–85% defect detection with a 15–30% false-positive rate. Single-sensor drone inspection returns 70–85% at 10–20%.</p>
+
+        <p>The improvement is not 10–20% better than visual-only. It is roughly a 40–57% improvement on detection rate and an 80–93% reduction in false-positive rate, against the manual baseline. The improvement against single-sensor drone inspection is smaller — single-sensor platforms outperform humans on coverage — but the gap on the defect classes that camera-only platforms structurally cannot see (corrosion under paint, subsurface delamination, internal moisture) is not 20%. It is roughly 100%, because a camera cannot detect them at all.</p>
+
+        <p class="meta">Sources: ARACHNID Product Specifications (February 2026), Performance Specifications and AI/ML Capabilities sections. SOFWERX Whitepaper §2.1 (manual baseline) and §2.2 (remote-sensing baseline).</p>
+
+        <h2 class="display-m">Why fusion is not just adding sensors.</h2>
+
+        <p>A reasonable question at this point is whether the value of multi-spectral inspection comes from the sensors themselves or from the way they are fused. The honest answer is that the sensors do most of the work and the fusion does the part that is hardest to copy. The six modules on the ATLAS sensor head are commercial-off-the-shelf where possible (FLIR, Ouster, Keyence, Headwall, Specim, Lucid) and custom where there is no commercial option (the UWB / mmWave radar integration). Any team with capital can buy the parts.</p>
+
+        <p>The harder problem is fusing six asynchronous, heterogeneously-rate-limited, geometrically-misaligned data streams into a single point-cloud-registered defect map — on-device, in real time, on a robot moving over a curved airframe at typical hangar lighting. That requires four things at once. <strong>Temporal alignment</strong>: every sample from every sensor stamped to a common clock with sub-millisecond drift. <strong>Geometric registration</strong>: the hyperspectral frame, the thermal frame, and the polarimetric frame all back-projected onto the LiDAR point cloud so the AI is comparing the same physical square centimetre across modalities. <strong>Calibration discipline</strong>: every modality has its own drift profile and its own environmental dependencies, and a multi-spectral platform that is not calibrated is a multi-spectral platform that returns six disagreeing answers and no consensus. <strong>Edge inference</strong>: doing all of the above on-device, on the Jetson AGX Orin, fast enough that the robot's autonomy loop never waits on the inspection pipeline.</p>
+
+        <p>This is where the 24–36 month lead lives. It is not in the sensor selection — that is a parts list. It is in the calibration data, the registration pipelines, the synchronisation harness, the AI's training on real fused-modality data rather than on individual camera frames. The sensor head is the visible part of the platform. The fusion stack is the part competitors find difficult to replicate even with the same parts.</p>
+
+        <blockquote class="pull-quote">
+          The sensors are a parts list. The fusion stack is the moat. Buy the same six components and you still have to teach the AI which signals to trust when they disagree.
+          <cite>Arachnid Systems · Internal Engineering Brief</cite>
+        </blockquote>
+
+        <h2 class="display-m">What this means for fleet operators.</h2>
+
+        <p>Translating the sensor argument into operational language: a single-sensor inspection platform improves the speed and coverage of the inspection regime an MRO already runs. It does not change the inspection regime itself. The defects that escape a visual walk-around continue to escape a camera-only drone, and the categories of finding that drive AOG events — internal corrosion, composite disbond, fastener-fatigue precursors — continue to require sample-based NDT performed by hand.</p>
+
+        <p>A multi-spectral platform is what makes it credible to move from periodic sample-based NDT to <strong>continuous, full-coverage, instrumented inspection of every airframe on every cycle.</strong> Coverage moves from 60–70% to 100%. Detection moves from 65–85% to 98%+. Minimum detectable defect moves from 1–5 mm under optimal conditions to 0.01 mm under laser profilometry and 0.1 mm under hyperspectral and thermal. False-positive rate moves from 15–30% to under 2%. Inspection time moves from 2–4 hours per narrowbody to 15–25 minutes. The economics follow the defect physics, not the labour cost.</p>
+
+        <p>That is the case for six sensors over one. It is not about marketing surface area. It is about closing a defect-detection gap that the industry has known about for forty years and has been waiting for someone to instrument.</p>
+
+        <p class="meta">Source: SOFWERX Whitepaper §2.1, §2.2, §2.3 — coverage, detection-rate, false-positive, and inspection-time deltas across manual, remote-sensing, and automated-deviation-detection paradigms.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ RELATED ARTICLES ═════ -->
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[Related]</p>
+          <h2 class="display-l" style="margin-top: 24px;">More from the team.</h2>
+        </div>
+        <p class="lede">The MRO super-cycle, the workforce gap, and the records pathway — the surrounding context for why multi-spectral matters now.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-mro.jpg" alt="MRO industrial machinery" />
+          </div>
+          <header class="card-head"><span class="meta">Industry analysis · April 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The MRO Super Cycle.</h3>
+          <p class="desc">The global MRO market grows from $119.7B to $156B by 2035. The fleet adds 9,300 aircraft. Manual inspection cannot scale through this.</p>
+          <a class="link-cta" href="the-mro-super-cycle.html">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-workforce.jpg" alt="Aviation workforce" />
+          </div>
+          <header class="card-head"><span class="meta">Workforce · May 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">40,000 Mechanics Short by 2028.</h3>
+          <p class="desc">North American aviation maintenance is 40,000 technicians short by 2028. The defense side faces the same gap on a faster clock.</p>
+          <a class="link-cta" href="aviation-workforce-crisis.html">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-faa.jpg" alt="Helicopter cockpit operation" />
+          </div>
+          <header class="card-head"><span class="meta">Regulatory · July 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The FAA-Records Moat.</h3>
+          <p class="desc">Seven phases from classification to industry standard. Phase 3 — Manual Integration — is where autonomous inspection becomes legally distinguishable from a science experiment.</p>
+          <a class="link-cta" href="faa-records-moat.html">Read</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ CTA ═════ -->
+  <section class="cta">
+    <p class="eyebrow" style="margin-bottom: 32px;">[Schedule a demo]</p>
+    <h2>See the six modalities, fused, on your airframe.</h2>
+    <p class="sub">A live ATLAS scan against an actual asset — your hangar, your aircraft type, your defect criteria. Our engineering team brings the platform; you bring the airframe and the open questions.</p>
+    <div class="actions">
+      <a class="link-cta link-cta--armed" href="../contact.html">Schedule a Demo</a>
+      <a class="link-cta link-cta--dim" href="../resources.html#downloads">Request the technical briefs</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="word">ARACHNID</p>
+          <p class="meta">Autonomous inspection<br/>for aerospace &amp; defense.<br/>HQ Miami, FL · Cincinnati · El Segundo · Melbourne</p>
+          <a class="link-cta" href="../contact.html" style="align-self: flex-start;">Schedule a Demo</a>
+        </div>
+        <div class="foot-col"><h4>Platform</h4><ul><li><a href="../platform.html">ATLAS Robot</a></li><li><a href="../platform.html#sensors">Sensor Head</a></li><li><a href="../platform.html#connect">ATLAS Connect AI</a></li><li><a href="../platform.html#deployment">Deployment</a></li><li><a href="../platform.html#compliance">Compliance</a></li><li><a href="../platform.html#form-factors">VR Headset <span class="coming">Coming Soon</span></a></li></ul></div>
+        <div class="foot-col"><h4>Solutions</h4><ul><li><a href="../aviation.html">Aviation MRO</a></li><li><a href="../defense.html">Defense</a></li><li><a href="../energy.html">Energy</a></li><li><a href="../space.html">Space &amp; Launch</a></li></ul></div>
+        <div class="foot-col"><h4>Resources</h4><ul><li><a href="../resources.html#blog">Blog</a></li><li><a href="../resources.html#faq">FAQ</a></li><li><a href="../resources.html#downloads">Downloads</a></li><li><a href="#">Pricing <span class="coming">TBD</span></a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="../about.html">About</a></li><li><a href="../about.html#team">Team</a></li><li><a href="../about.html#partners">Partners</a></li><li><a href="../contact.html">Contact</a></li><li><a href="#">Careers</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 Arachnid Systems Corporation · Delaware C-Corp</span><span class="right"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">ITAR Notice</a></span></div>
+    </div>
+  </footer>
+
+  <a class="brand-watermark" href="../index.html" aria-label="Arachnid Systems">
+    <img src="../assets/brand/arachnid-wordmark.avif" alt="ARACHNID" />
+    <span class="wm-label">arachnid systems</span>
+  </a>
+
+  <script type="module" src="../motion.js"></script>
+</body>
+</html>
