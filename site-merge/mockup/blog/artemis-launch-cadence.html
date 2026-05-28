@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>$98 Billion and Counting: What Artemis Tells Us About Launch-Cadence Inspection | Arachnid Systems</title>
+  <meta name="description" content="Artemis is $98B over budget and 4+ years late. A hydrogen leak — invisible to visual inspection — is the through-line. Why launch-cadence economics demand automated multi-spectral inspection." />
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* Long-form article body — wider than .lede (60ch) for readable paragraphs */
+    .article-body { max-width: 72ch; margin: 0 auto; }
+    .article-body p { font-size: 17px; line-height: 28px; color: var(--text-2); margin-top: 24px; }
+    .article-body p:first-child { margin-top: 0; }
+    .article-body p strong { color: var(--text); font-weight: 500; }
+    .article-body h2.display-m { margin-top: 96px; color: var(--text); }
+    .article-body h2.display-m + p { margin-top: 32px; }
+    .article-body .meta { margin-top: 16px; }
+    .article-body ul { margin-top: 24px; padding-left: 0; list-style: none; }
+    .article-body ul li {
+      font-size: 17px; line-height: 28px; color: var(--text-2);
+      padding: 12px 0 12px 24px; border-top: 1px solid var(--hair);
+      position: relative;
+    }
+    .article-body ul li:last-child { border-bottom: 1px solid var(--hair); }
+    .article-body ul li::before {
+      content: "→"; position: absolute; left: 0; color: var(--dim);
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 500; }
+    .pull-quote {
+      margin: 64px 0; padding: 48px 0;
+      border-top: 1px solid var(--hair-2); border-bottom: 1px solid var(--hair-2);
+      font-weight: 500; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.25;
+      letter-spacing: -.02em; color: var(--text); max-width: 60ch;
+    }
+    .pull-quote cite {
+      display: block; margin-top: 24px;
+      font-family: var(--mono); font-feature-settings: var(--mono-feat);
+      font-size: 12px; line-height: 16px; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--dim); font-style: normal;
+    }
+    .byline {
+      font-family: var(--mono); font-feature-settings: var(--mono-feat);
+      font-size: 12px; line-height: 16px; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--dim);
+      margin-top: 24px;
+    }
+    .article-hero-img { margin-top: 64px; }
+    @media (max-width: 800px) {
+      .article-body h2.display-m { margin-top: 64px; }
+    }
+  </style>
+</head>
+<body class="mockup">
+  <div class="mockup-banner">MOCKUP · ARACHNID v0.1 · pre-deployment · review only</div>
+
+  <nav class="nav">
+    <a href="../index.html" class="brand"><span class="brand-mark" aria-hidden="true"></span>ARACHNID</a>
+    <div class="nav-links">
+      <a href="../platform.html">Platform</a>
+      <a href="../aviation.html">Solutions</a>
+      <a href="../about.html">About</a>
+      <a href="../resources.html" class="active">Resources</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+    <a href="../contact.html" class="nav-cta">Schedule a Demo →</a>
+  </nav>
+
+  <!-- Resources sub-nav -->
+  <div style="border-bottom: 1px solid var(--hair); padding: 0 40px; display: flex; gap: 0;">
+    <a href="../resources.html#blog" style="padding: 14px 20px; border-right: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text); border-bottom: 1px solid var(--text); margin-bottom: -1px;">Blog</a>
+    <a href="../resources.html#faq" style="padding: 14px 20px; border-right: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim);">FAQ</a>
+    <a href="../resources.html#downloads" style="padding: 14px 20px; border-right: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim);">Downloads</a>
+  </div>
+
+  <!-- ═════ HERO ═════ -->
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Space · September 2026</p>
+      <h1 class="display-l">$98 Billion<br/>and Counting:<br/>What Artemis Tells Us<br/>About Launch-Cadence<br/>Inspection.</h1>
+      <p class="byline">By the ARACHNID Systems team · ~8 min read</p>
+      <p class="lede">NASA's flagship lunar program is more than four years behind schedule and roughly $98 billion over budget. The most public symptom — an Artemis II scrub on the pad — was a hydrogen leak: a gas you cannot see, smell, or hear, on a vehicle inspected by some of the most experienced engineers on the planet. The detection gap, not the rocket, is the story. And it is the story the rest of the launch industry is now living through at compressed scale.</p>
+      <div class="article-hero-img">
+        <div class="asset-ph asset-ph--tall">
+          <img class="photo-hero" src="../assets/photos/unsplash/blog-artemis.jpg" alt="Night-time rocket launch lights" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═════ BODY ═════ -->
+  <section class="section">
+    <div class="container">
+      <div class="article-body">
+
+        <h2 class="display-m">The $98 billion commitment.</h2>
+        <p>Artemis is not a marketing program. It is the most expensive human-spaceflight commitment the United States has made since Apollo, and it is being executed inside a federal budget cycle that no longer rewards patience. The cost overrun on the program now exceeds $98 billion against original estimates, and the schedule has slipped by more than four years. Those are not numbers that get absorbed quietly — they are numbers that show up in congressional hearings, in NASA-Inspector-General reports, and in every conversation about what the next decade of American spaceflight is actually going to cost.</p>
+        <p>The interesting question is not "why is Artemis expensive." Large flagship programs are always expensive. The interesting question is <strong>where does the time go</strong>. And when you look at where the time actually goes on a multi-year scrub-and-stand-down cycle, an uncomfortably large share of it goes to inspection, requalification, and the slow forensic work of figuring out whether something invisible was, or was not, leaking.</p>
+        <p class="meta">Source: Technology Primer (April 2026) · DR/UPLOAD/03 Product and Technology · MARKET_BRIEFS.md Brief 4 (Space Launch)</p>
+
+        <h2 class="display-m">Hydrogen and what your eyes cannot see.</h2>
+        <p>Liquid hydrogen is the highest-performing chemical propellant flown in human spaceflight. It is also the most pathological molecule a maintenance technician can be asked to chase. Hydrogen gas is colorless. It is odorless. Its flame burns in the near-ultraviolet and is functionally invisible in daylight. The molecule is small enough to migrate through fittings that would seal nitrogen or helium without complaint. A leak that would be a non-event on a kerosene stage becomes a launch-stopping safety condition on a hydrogen stage.</p>
+        <p>What this means in practice is that <strong>visual inspection — the modality on which most aerospace turnaround still depends — is the wrong tool for the job on the most consequential vehicle in NASA's manifest</strong>. A technician with a flashlight and a checklist cannot see a hydrogen leak. A high-resolution RGB camera cannot see a hydrogen leak. Even a thermal camera, on its own, will often miss the signature unless it is tuned to the specific temperature delta of the cryogenic boil-off.</p>
+        <p>Hydrogen leaks are detectable. They show up reliably in ultraviolet imaging of the H-α flame band, in long-wave infrared thermography of the cryogenic boil-off plume, in tunable-diode laser absorption spectroscopy, and in carefully cross-referenced acoustic-emission data. None of these are exotic technologies. They are simply not what is mounted on the average launch-pad inspection cart.</p>
+        <p class="meta">Source: Technology Primer slide on Artemis II hydrogen-leak scrub · MARKET_BRIEFS.md Brief 4</p>
+
+        <h2 class="display-m">The Artemis II detection gap.</h2>
+        <p>When Artemis II rolled to the pad for its first crewed launch attempt, the gap between what the standing inspection regime could detect and what the vehicle was actually doing turned out to be measurable in months. The scrub was not the failure. The scrub was the system working — the launch was waved off because a leak was identified before it became a loss-of-vehicle event. What the scrub did expose is the cost of finding the leak <strong>at the pad</strong> instead of <strong>at the integration facility</strong>, weeks earlier, when the cost of the fix would have been measured in shift hours rather than launch windows.</p>
+        <p>That is the gap. It is not a gap in capability — the underlying inspection physics has been understood since the Shuttle program. It is a gap in <strong>detection latency</strong>: how quickly a developing leak signature can be identified, localized, and routed to the right discipline for resolution. On a program whose annual carry cost is measured in billions, every month of detection latency is a real, accruable line item.</p>
+        <p>The Technology Primer slide that we keep coming back to in customer conversations puts it bluntly: <strong>$95+ billion, three years ago, and the cost of catching up is not money. It is faith.</strong> The cadence of unanswered questions erodes confidence in the program faster than any single technical failure ever could.</p>
+        <p class="meta">Source: Technology Primer (DR/UPLOAD/03 Product and Technology) — Artemis hydrogen-leak slide</p>
+
+        <div class="pull-quote">
+          "The economics of New Space mandate new technology to ensure reliability and scalability. Losing faith means losing your business."
+          <cite>— ARACHNID Technology Primer, April 2026</cite>
+        </div>
+
+        <h2 class="display-m">Launch cadence as a forcing function.</h2>
+        <p>The Artemis cost-overrun story would matter even if Artemis were the only launch program in the country. It is not. The global orbital launch rate has roughly tripled in the last four years, climbing from 61 launches in 2022 toward more than 210 projected for 2027. Reusable launch vehicles compress the inspection-to-flight cycle from months to days. The space launch services market is projected to reach $24.4–41.3 billion by 2030, and the U.S. Space Force has already committed $13.7 billion in NSSL Phase 3 contracts running through FY2029.</p>
+        <p>None of those numbers care about how long it takes a technician to chase down a suspected hydrogen leak with a soap-bubble bottle. The cadence is going up whether the inspection regime can keep up or not. <strong>The inspection process designed for a dozen launches per year cannot support a dozen launches per month</strong>, and the inspection process designed to find a leak after the rollout cannot support a vehicle that needs to fly again next week.</p>
+        <p>This is what we mean when we talk about launch cadence as a forcing function. It is not a marketing term. It is the rate at which the existing inspection model becomes the binding constraint on the entire commercial space economy.</p>
+        <p class="meta">Source: MARKET_BRIEFS.md Brief 4 · FAA AST launch statistics · Aviation Week (2025 global launch rate)</p>
+
+        <h2 class="display-m">What multi-spectral inspection unlocks at KSC.</h2>
+        <p>ARACHNID holds an active pilot partnership with NASA Kennedy Space Center for launch infrastructure inspection, tied directly to the Artemis program. The pilot is not a demonstration on a static mockup. It is operational scanning against the kind of cryogenic plumbing, pad structure, and ground-support equipment where the inspection gap actually lives.</p>
+        <p>The ATLAS sensor head fuses six complementary modalities on a single 6-DOF stabilized gimbal:</p>
+        <ul>
+          <li><strong>Hyperspectral imaging</strong> — 200+ bands across 400–2,500 nm, detecting composite degradation and thermal-protection-system anomalies that are invisible to the naked eye.</li>
+          <li><strong>LWIR thermal</strong> — cryogenic boil-off plumes, hot-gas leaks, and bearing-failure signatures resolved at sensor-grade thermal contrast.</li>
+          <li><strong>LiDAR</strong> — 300,000 points per second at 0.5 mm precision, mapping launch-induced deformation across vehicle and pad structures.</li>
+          <li><strong>Laser profilometry</strong> — sub-millimetre quantification of erosion on ablative surfaces and tile-bond lines.</li>
+          <li><strong>Radar NDT</strong> — sub-surface void, debond, and corrosion detection through thermal-protection material.</li>
+          <li><strong>Polarimetric RGB</strong> — surface-stress and material-property cues that conventional RGB simply cannot resolve.</li>
+        </ul>
+        <p>All six modalities run on-device on an NVIDIA Jetson AGX Orin at 275 TOPS. Results are produced at the pad, in minutes, not in a remote lab eight hours later. The same head that scans a 737-class airframe at Delta TechOps scans a launch-vehicle interstage at KSC — that is what we mean by a universal sensor head.</p>
+        <p>The point of multi-spectral inspection at launch cadence is not "more data." More data is the easy part. The point is that <strong>a hydrogen leak signature shows up in two or three of those modalities before it ever shows up to a human inspector</strong>, and the cost of catching it in the integration cell instead of at the pad is the difference between a shift and a launch window.</p>
+        <p class="meta">Source: DataRoom_v2_C/06.Traction/README.md (NASA KSC active pilot) · Technology Primer (sensor stack specifications)</p>
+
+        <h2 class="display-m">From flagship to operating tempo.</h2>
+        <p>Artemis is the flagship that the public sees. The flagship matters because the next decade of American spaceflight is being budgeted, on the Hill and inside primes, against what the flagship costs. Every additional month of detection latency on Artemis is a month of higher unit cost on the next NSSL block, on every Vandenberg support-infrastructure contract, and on every commercial cadence-driven reusable vehicle that is now in flight test.</p>
+        <p>The economics of New Space — the $1.8T figure we keep citing in our investor and customer conversations — cannot run on the old inspection model. That is not a critique of the people doing the inspecting. The people doing the inspecting are extraordinary engineers operating under extraordinary constraints. It is a critique of the <strong>tooling</strong> we have asked them to use against a problem whose detection physics has fundamentally outgrown the flashlight-and-checklist regime.</p>
+        <p>What changes when an autonomous multi-spectral platform handles the first-pass scan? The technician's time moves from chasing invisible leaks to adjudicating prioritized findings. The inspection regime moves from "schedule-and-hope" to evidence-driven. The program moves from "we believe the vehicle is ready" to "here is the multi-modal record that says so." And the public — Congress, the press, the next generation of aerospace engineers — gets the thing it actually needs from a flagship program, which is reasons to keep believing in it.</p>
+        <p>That is the through-line from Artemis to launch cadence. It is not the rocket. It is the record.</p>
+        <p class="meta">Source: Technology Primer · ARACHNID space-vertical overview (site-merge/mockup/space.html)</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ RELATED ═════ -->
+  <section class="section section--alt">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow">[02] Related dispatches</p>
+          <h2 class="display-l" style="margin-top: 24px;">Keep reading.</h2>
+        </div>
+        <p class="lede">Three threads from the same loom — the sensor stack that makes invisible damage visible, the records moat that turns inspection into a program-of-record, and the MRO super-cycle that funds the whole thing.</p>
+      </header>
+
+      <div class="cards cards--3">
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-sensor.jpg" alt="Multi-spectral data pattern" />
+          </div>
+          <header class="card-head"><span class="meta">Technology · June 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">Six Sensors, One Platform: Multi-Spectral vs. Visual-Only Inspection</h3>
+          <p class="desc">Donecle uses one sensor. Gecko uses two. ATLAS integrates six — hyperspectral, LWIR thermal, LiDAR, laser profilometry, radar NDT, polarimetric RGB. A side-by-side detection-capability comparison.</p>
+          <a class="link-cta" href="/blog/multi-spectral-vs-visual">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-faa.jpg" alt="Helicopter cockpit operation" />
+          </div>
+          <header class="card-head"><span class="meta">Regulatory · July 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The FAA-Records Moat: Why Manuals Integration Is the Hinge</h3>
+          <p class="desc">Seven phases from classification to industry standard. Phase 3 — Manual Integration into GMM/CAMP and RSM/QCM — is where autonomous inspection becomes legally distinguishable from a science experiment.</p>
+          <a class="link-cta" href="/blog/faa-records-moat">Read</a>
+        </article>
+        <article class="card">
+          <div class="asset-ph" style="min-height: 180px; margin-bottom: 8px;">
+            <img class="photo-blog" src="../assets/photos/unsplash/blog-mro.jpg" alt="MRO industrial machinery" />
+          </div>
+          <header class="card-head"><span class="meta">Industry analysis · April 2026</span></header>
+          <h3 class="name" style="font-size: 22px; line-height: 26px;">The MRO Super Cycle: Why Autonomous Inspection Is Inevitable</h3>
+          <p class="desc">The global MRO market grows from $119.7B to $156B by 2035. The fleet adds 9,300 aircraft. The certified-inspector pool doubles its open headcount. Manual inspection cannot scale through this — here is what changes.</p>
+          <a class="link-cta" href="/blog/mro-super-cycle">Read</a>
+        </article>
+      </div>
+
+      <div style="margin-top: 32px; text-align: center;">
+        <a href="../resources.html#blog" class="link-cta link-cta--dim">View all posts</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ CTA ═════ -->
+  <section class="cta">
+    <p class="eyebrow" style="margin-bottom: 32px;">[03] Talk to the team</p>
+    <h2>The Final Word in Space.</h2>
+    <p class="sub">Active NASA Kennedy Space Center pilot, Artemis-tied. Six fused sensor modalities purpose-built for composites, thermal-protection systems, and pad infrastructure. Let us show you what ATLAS can do for your launch program.</p>
+    <div class="actions">
+      <a class="link-cta link-cta--armed" href="../contact.html">Schedule a Demo</a>
+      <a class="link-cta link-cta--dim" href="mailto:ben@arachnidsys.com">ben@arachnidsys.com</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <p class="word">ARACHNID</p>
+          <p class="meta">Autonomous inspection<br/>for aerospace & defense.<br/>HQ Miami, FL · Cincinnati · El Segundo · Melbourne</p>
+          <a class="link-cta" href="../contact.html" style="align-self: flex-start;">Schedule a Demo</a>
+        </div>
+        <div class="foot-col"><h4>Platform</h4><ul><li><a href="../platform.html">ATLAS Robot</a></li><li><a href="../platform.html#sensors">Sensor Head</a></li><li><a href="../platform.html#connect">ATLAS Connect AI</a></li><li><a href="../platform.html#deployment">Deployment</a></li><li><a href="../platform.html#compliance">Compliance</a></li><li><a href="../platform.html#form-factors">VR Headset <span class="coming">Coming Soon</span></a></li></ul></div>
+        <div class="foot-col"><h4>Solutions</h4><ul><li><a href="../aviation.html">Aviation MRO</a></li><li><a href="../defense.html">Defense</a></li><li><a href="../energy.html">Energy</a></li><li><a href="../space.html">Space & Launch</a></li></ul></div>
+        <div class="foot-col"><h4>Resources</h4><ul><li><a href="../resources.html#blog">Blog</a></li><li><a href="../resources.html#faq">FAQ</a></li><li><a href="../resources.html#downloads">Downloads</a></li><li><a href="#">Pricing <span class="coming">TBD</span></a></li></ul></div>
+        <div class="foot-col"><h4>Company</h4><ul><li><a href="../about.html">About</a></li><li><a href="../about.html#team">Team</a></li><li><a href="../about.html#partners">Partners</a></li><li><a href="../contact.html">Contact</a></li><li><a href="#">Careers</a></li></ul></div>
+      </div>
+      <div class="foot-bottom"><span>© 2026 Arachnid Systems Corporation · Delaware C-Corp</span><span class="right"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">ITAR Notice</a></span></div>
+    </div>
+  </footer>
+  <a class="brand-watermark" href="../index.html" aria-label="Arachnid Systems">
+    <img src="../assets/brand/arachnid-wordmark.avif" alt="ARACHNID" />
+    <span class="wm-label">arachnid systems</span>
+  </a>
+
+  <script type="module" src="../motion.js"></script>
+</body>
+</html>
