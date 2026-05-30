@@ -8,18 +8,39 @@ Apalachicola Regional Airport (KAAF), and its theoretical impact on Arachnid Sys
 
 ---
 
-## 0. Source caveat (read first)
+## 0. Source caveat + CORRECTED DEAL FRAMING (read first)
 
-- The "for sale" signal comes from a Reddit r/aviationmaintenance post that Ben shared
-  (`reddit.com/r/aviationmaintenance/s/Rr66xZuTyN`). Reddit blocks automated fetching, so
-  the post content could **not** be independently retrieved or verified here.
-- **No public for-sale listing was found** on the open web (BizQuest, BizBuySell, LoopNet,
-  GlobalAir directory, the company site, FBO M&A brokers). As of this writing Oyster
-  Aviation appears to be **actively hiring an A&P mechanic** (avjobs.com listing) — which is
-  a normal operating signal, not obviously a wind-down signal, though owners sometimes staff
-  up to make a business sellable.
-- **Treat the sale itself as unconfirmed.** Everything below is a contingency analysis:
-  "*if* it is for sale and *if* Arachnid acquired it, what would it mean?"
+**UPDATE (2026-05-30): the Reddit post content was obtained (pasted by Ben).** It is NOT a
+sale. Reddit/old.reddit and four front-end mirrors were all blocked (egress/403/503), so the
+text could not be auto-fetched — but Ben supplied the post verbatim. The owner writes:
+
+> "I'm looking for an A&P IA to take over my shop. **I'm not selling it or hiring anyone, I
+> just can't do it anymore.** I have a hangar on the airfield that can fit 5 planes, 2 offices,
+> conference room, parts room, all the equipment needed except hand tools. Parts room partially
+> stocked. Fixed costs are low. Florida panhandle. A couple planes in the queue so there's
+> revenue already to be made. DM me if interested."
+
+This reframes everything below:
+
+1. **It is an operator-takeover, not an acquisition.** The owner explicitly is *not selling and
+   not hiring*. He wants an **A&P/IA to take over the shop** — most likely a handoff of the
+   hangar lease + equipment + existing customer queue, possibly for little or no purchase price.
+   The binding requirement is providing a **certificated A&P/IA** to run it.
+2. **It's a burnout / key-person exit** ("I just can't do it anymore") — confirms the
+   key-person risk flagged in §4.2. There may be no transferable "business" beyond the owner's
+   own labor, the lease, and the gear.
+3. **Verified assets:** 5-plane hangar on the field, 2 offices, conference room, parts room
+   (partially stocked), all equipment except hand tools, **low fixed costs**, and **a couple
+   planes already in the queue** (immediate revenue).
+4. **Identity caveat:** the post says only **"Florida panhandle"** — it does **not** name Oyster
+   Aviation or KAAF. The Oyster/KAAF link is Ben's inference (plausible, but UNCONFIRMED). It
+   could be a different panhandle shop.
+5. **No public for-sale listing exists** (BizQuest, BizBuySell, LoopNet, GlobalAir, broker
+   sites) — consistent with this being an informal "take it over" post, not a brokered sale.
+
+Net: read "acquisition" below as **"step in and take over a turnkey A&P/IA shop"** — a
+potentially very low-cost route to a captive hangar + equipment + revenue, *conditional on
+Arachnid supplying or hiring the certificated A&P/IA to operate it.*
 
 ---
 
